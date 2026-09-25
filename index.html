@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Rinear Systems — Dashboard Interno</title>
+  <meta name="description" content="Dashboard interno da Rinear Systems: preços, pipeline, contratos, marketing e identidade visual" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="cursor-glow" aria-hidden="true"></div>
+
+  <header class="nav shell">
+    <a class="brand" href="#inicio" aria-label="Rinear Systems"><span>R</span><i>S</i></a>
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="visao">Visão Geral</button>
+      <button class="tab-btn" data-tab="precos">Preços</button>
+      <button class="tab-btn" data-tab="pipeline">Pipeline</button>
+      <button class="tab-btn" data-tab="contratos">Contratos</button>
+      <button class="tab-btn" data-tab="marketing">Marketing</button>
+      <button class="tab-btn" data-tab="identidade">Identidade</button>
+    </nav>
+    <span class="user-badge">Rinear Systems</span>
+  </header>
+
+  <main class="shell">
+    <!-- ABA: VISÃO GERAL -->
+    <section class="tab-panel active" id="tab-visao">
+      <div class="panel-header">
+        <h1>Painel Interno</h1>
+        <p class="subtitle">Rinear Systems — Ideias em sistemas reais</p>
+      </div>
+
+      <div class="metrics-grid">
+        <article class="metric-card">
+          <div class="metric-icon">💰</div>
+          <div class="metric-info">
+            <span class="metric-value" id="m-receita">R$ 0</span>
+            <span class="metric-label">Receita Estimada (pipeline)</span>
+          </div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon">📈</div>
+          <div class="metric-info">
+            <span class="metric-value" id="m-leads">0</span>
+            <span class="metric-label">Leads Ativos</span>
+          </div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon">📄</div>
+          <div class="metric-info">
+            <span class="metric-value" id="m-propostas">0</span>
+            <span class="metric-label">Propostas Enviadas</span>
+          </div>
+        </article>
+        <article class="metric-card">
+          <div class="metric-icon">✍️</div>
+          <div class="metric-info">
+            <span class="metric-value" id="m-contratos">0</span>
+            <span class="metric-label">Contratos Assinados</span>
+          </div>
+        </article>
+      </div>
+
+      <div class="quick-actions">
+        <h2>Ações Rápidas</h2>
+        <div class="action-buttons">
+          <a class="button primary" href="#pipeline" onclick="switchTab('pipeline')">Novo Lead</a>
+          <a class="button secondary" href="#precos" onclick="switchTab('precos')">Ver Tabela de Preços</a>
+          <a class="button secondary" href="#contratos" onclick="switchTab('contratos')">Gerar Contrato</a>
+          <a class="button ghost" target="_blank" href="../01_Site/v2-atual/index.html">Ver Site Público</a>
+        </div>
+      </div>
+
+      <div class="recent-activity">
+        <h2>Atividade Recente</h2>
+        <div id="activity-list" class="activity-list">
+          <p class="empty-state">Carregando pipeline...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA: PREÇOS -->
+    <section class="tab-panel" id="tab-precos">
+      <div class="panel-header">
+        <h1>Tabela de Preços</h1>
+        <p class="subtitle">Valores-base para negociação — uso interno</p>
+      </div>
+
+      <div class="price-tabs">
+        <button class="price-tab active" data-price="lp">Landing Pages</button>
+        <button class="price-tab" data-price="site">Sites Institucionais</button>
+        <button class="price-tab" data-price="addons">Adicionais</button>
+      </div>
+
+      <div class="price-table-wrapper" id="price-lp">
+        <table class="price-table">
+          <thead>
+            <tr>
+              <th>Pacote</th>
+              <th>Escopo</th>
+              <th>Prazo</th>
+              <th>Preço Base</th>
+              <th>Lançamento (5 primeiros)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>LP Start</strong></td>
+              <td>1 página, até 5 seções, copy do cliente, botão WhatsApp, formulário simples, responsivo</td>
+              <td>5 dias úteis</td>
+              <td>R$ 1.497</td>
+              <td class="highlight">R$ 997</td>
+            </tr>
+            <tr>
+              <td><strong>LP Pro</strong> ⭐</td>
+              <td>1 página, até 8 seções, copywriting assistido, formulário + integrações, animações, SEO on-page</td>
+              <td>7–10 dias úteis</td>
+              <td>R$ 2.497</td>
+              <td class="highlight">R$ 1.797</td>
+            </tr>
+            <tr>
+              <td><strong>LP Premium</strong></td>
+              <td>LP Pro + variações para teste A/B (hero), pixel/analytics, 1 revisão pós-entrega em 30 dias</td>
+              <td>12–15 dias úteis</td>
+              <td>R$ 3.497</td>
+              <td class="highlight">R$ 2.697</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="price-table-wrapper hidden" id="price-site">
+        <table class="price-table">
+          <thead>
+            <tr>
+              <th>Pacote</th>
+              <th>Escopo</th>
+              <th>Prazo</th>
+              <th>Preço Base</th>
+              <th>Lançamento</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Site Start</strong></td>
+              <td>Até 3 páginas (Home, Sobre, Contato), responsivo, SEO básico</td>
+              <td>10 dias úteis</td>
+              <td>R$ 2.997</td>
+              <td class="highlight">R$ 2.197</td>
+            </tr>
+            <tr>
+              <td><strong>Site Pro</strong> ⭐</td>
+              <td>Até 6 páginas, copywriting assistido, SEO on-page, blog simples ou portfólio</td>
+              <td>15–20 dias úteis</td>
+              <td>R$ 4.497</td>
+              <td class="highlight">R$ 3.497</td>
+            </tr>
+            <tr>
+              <td><strong>Site Premium</strong></td>
+              <td>Até 10 páginas, identidade visual estendida, animações, analytics, 30 dias de suporte</td>
+              <td>20–30 dias úteis</td>
+              <td>R$ 6.997</td>
+              <td class="highlight">R$ 5.497</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="price-table-wrapper hidden" id="price-addons">
+        <table class="price-table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Preço</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Página extra</td><td>R$ 497</td></tr>
+            <tr><td>Logo simples (quando não houver)</td><td>R$ 397</td></tr>
+            <tr><td>Copywriting completo da página</td><td>R$ 497</td></tr>
+            <tr><td>Hospedagem + domínio (1º ano, gerenciado)</td><td>R$ 397</td></tr>
+            <tr><td>Manutenção mensal (atualizações e pequenos ajustes)</td><td>R$ 197/mês</td></tr>
+            <tr><td>Taxa de urgência (prazo reduzido em 50%)</td><td>+ 40%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rules-box">
+        <h3>Regras Comerciais</h3>
+        <ul>
+          <li><strong>Entrada:</strong> 50% no fechamento + 50% na entrega. (LP Start aceita 100% no Pix.)</li>
+          <li><strong>Revisões:</strong> 2 rodadas inclusas por pacote; extras a R$ 147/rodada.</li>
+          <li><strong>Piso de negociação:</strong> nunca fechar abaixo de 70% do preço base.</li>
+          <li><strong>Indicação:</strong> cliente que indicar e fechar recebe R$ 150 de crédito em manutenção.</li>
+          <li><strong>Garantia:</strong> publicação em hospedagem do cliente excluída após 7 dias sem revisão.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ABA: PIPELINE -->
+    <section class="tab-panel" id="tab-pipeline">
+      <div class="panel-header">
+        <div>
+          <h1>Pipeline de Leads</h1>
+          <p class="subtitle">Controle de prospecção e follow-up</p>
+        </div>
+        <button class="button primary" id="btn-novo-lead">+ Novo Lead</button>
+      </div>
+
+      <div class="kanban-board" id="kanban-board">
+        <div class="kanban-column" data-status="contato">
+          <div class="kanban-header">
+            <span class="kanban-title">Contato Inicial</span>
+            <span class="kanban-count" id="count-contato">0</span>
+          </div>
+          <div class="kanban-cards" id="col-contato"></div>
+        </div>
+        <div class="kanban-column" data-status="respondeu">
+          <div class="kanban-header">
+            <span class="kanban-title">Respondeu</span>
+            <span class="kanban-count" id="count-respondeu">0</span>
+          </div>
+          <div class="kanban-cards" id="col-respondeu"></div>
+        </div>
+        <div class="kanban-column" data-status="proposta">
+          <div class="kanban-header">
+            <span class="kanban-title">Proposta Enviada</span>
+            <span class="kanban-count" id="count-proposta">0</span>
+          </div>
+          <div class="kanban-cards" id="col-proposta"></div>
+        </div>
+        <div class="kanban-column" data-status="followup">
+          <div class="kanban-header">
+            <span class="kanban-title">Follow-up</span>
+            <span class="kanban-count" id="count-followup">0</span>
+          </div>
+          <div class="kanban-cards" id="col-followup"></div>
+        </div>
+        <div class="kanban-column" data-status="fechado">
+          <div class="kanban-header">
+            <span class="kanban-title">Fechado ✓</span>
+            <span class="kanban-count" id="count-fechado">0</span>
+          </div>
+          <div class="kanban-cards" id="col-fechado"></div>
+        </div>
+        <div class="kanban-column" data-status="frio">
+          <div class="kanban-header">
+            <span class="kanban-title">Frio</span>
+            <span class="kanban-count" id="count-frio">0</span>
+          </div>
+          <div class="kanban-cards" id="col-frio"></div>
+        </div>
+      </div>
+
+      <!-- Modal Novo Lead -->
+      <div class="modal hidden" id="modal-lead">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Novo Lead</h2>
+            <button class="modal-close" aria-label="Fechar">✕</button>
+          </div>
+          <form id="form-lead">
+            <div class="form-row">
+              <label>Nome <span>*</span></label>
+              <input type="text" name="nome" required />
+            </div>
+            <div class="form-row">
+              <label>Empresa / Nicho <span>*</span></label>
+              <input type="text" name="nicho" placeholder="Ex: Clínica odontológica, Advogado, E-commerce" required />
+            </div>
+            <div class="form-row">
+              <label>Cidade</label>
+              <input type="text" name="cidade" placeholder="Uberlândia" />
+            </div>
+            <div class="form-row">
+              <label>Canal de Origem</label>
+              <select name="canal">
+                <option value="instagram">Instagram</option>
+                <option value="whatsapp">WhatsApp</option>
+                <option value="indicacao">Indicação</option>
+                <option value="google-maps">Google Maps</option>
+                <option value="grupo-facebook">Grupo Facebook</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Contato (WhatsApp/E-mail)</label>
+              <input type="text" name="contato" placeholder="(34) 99999-9999 ou email@dominio.com" />
+            </div>
+            <div class="form-row">
+              <label>Valor Proposto (R$)</label>
+              <input type="number" name="valor" min="0" step="1" placeholder="Ex: 2497" />
+            </div>
+            <div class="form-row">
+              <label>Observações</label>
+              <textarea name="observacoes" rows="3" placeholder="Contexto da conversa, dores do cliente, próximos passos..."></textarea>
+            </div>
+            <div class="form-actions">
+              <button type="button" class="button secondary modal-cancel">Cancelar</button>
+              <button type="submit" class="button primary">Salvar Lead</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Modal Detalhes Lead -->
+      <div class="modal hidden" id="modal-detalhes">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content large">
+          <div class="modal-header">
+            <h2 id="detalhe-nome">Detalhes do Lead</h2>
+            <button class="modal-close" aria-label="Fechar">✕</button>
+          </div>
+          <div id="detalhe-conteudo"></div>
+          <div class="modal-footer">
+            <button class="button secondary" id="btn-mover-frio">Mover para Frio</button>
+            <button class="button primary" id="btn-avancar">Avançar Etapa</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA: CONTRATOS -->
+    <section class="tab-panel" id="tab-contratos">
+      <div class="panel-header">
+        <h1>Contratos</h1>
+        <p class="subtitle">Modelo e contratos assinados</p>
+      </div>
+
+      <div class="contracts-grid">
+        <article class="contract-card">
+          <div class="contract-icon">📋</div>
+          <h3>Modelo Padrão</h3>
+          <p>Contrato de prestação de serviços com cláusulas de escopo, pagamento, prazos, revisões, direitos autorais e rescisão.</p>
+          <a class="button secondary" href="../05_Contratos/modelos/contrato-prestacao-servicos.md" target="_blank">Abrir Modelo (Markdown)</a>
+        </article>
+
+        <article class="contract-card">
+          <div class="contract-icon">✍️</div>
+          <h3>Gerar Novo Contrato</h3>
+          <p>Preencha os dados do cliente e gere um contrato pronto para assinatura (copia para área de transferência).</p>
+          <button class="button primary" id="btn-gerar-contrato">Gerar Contrato</button>
+        </article>
+
+        <article class="contract-card">
+          <div class="contract-icon">📁</div>
+          <h3>Contratos Assinados</h3>
+          <p>Arquivos PDF/assinados organizados por cliente na pasta <code>05_Contratos/assinados/clientes/</code></p>
+          <a class="button secondary" href="../05_Contratos/assinados/clientes/" target="_blank">Abrir Pasta</a>
+        </article>
+      </div>
+
+      <!-- Modal Gerar Contrato -->
+      <div class="modal hidden" id="modal-contrato">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content large">
+          <div class="modal-header">
+            <h2>Gerar Contrato</h2>
+            <button class="modal-close" aria-label="Fechar">✕</button>
+          </div>
+          <form id="form-contrato">
+            <div class="form-row">
+              <label>Nome/Razão Social do Cliente <span>*</span></label>
+              <input type="text" name="cliente_nome" required />
+            </div>
+            <div class="form-row">
+              <label>CPF/CNPJ <span>*</span></label>
+              <input type="text" name="cliente_cpfcnpj" required />
+            </div>
+            <div class="form-row">
+              <label>Responsável <span>*</span></label>
+              <input type="text" name="cliente_responsavel" required />
+            </div>
+            <div class="form-row">
+              <label>E-mail <span>*</span></label>
+              <input type="email" name="cliente_email" required />
+            </div>
+            <div class="form-row">
+              <label>Tipo de Projeto <span>*</span></label>
+              <select name="tipo_projeto" required>
+                <option value="lp">Landing Page</option>
+                <option value="site">Site Institucional</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Pacote <span>*</span></label>
+              <select name="pacote" required>
+                <option value="LP Start">LP Start — R$ 1.497</option>
+                <option value="LP Pro">LP Pro — R$ 2.497</option>
+                <option value="LP Premium">LP Premium — R$ 3.497</option>
+                <option value="Site Start">Site Start — R$ 2.997</option>
+                <option value="Site Pro">Site Pro — R$ 4.497</option>
+                <option value="Site Premium">Site Premium — R$ 6.997</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Prazo (dias úteis) <span>*</span></label>
+              <input type="number" name="prazo" min="1" required />
+            </div>
+            <div class="form-row">
+              <label>Valor Total (R$) <span>*</span></label>
+              <input type="number" name="valor_total" min="1" step="1" required />
+            </div>
+            <div class="form-row">
+              <label>Chave Pix <span>*</span></label>
+              <input type="text" name="pix_chave" placeholder="chave@exemplo.com" required />
+            </div>
+            <div class="form-row">
+              <label>Cidade/UF (Foro) <span>*</span></label>
+              <input type="text" name="foro" value="Uberlândia/MG" required />
+            </div>
+            <div class="form-actions">
+              <button type="button" class="button secondary modal-cancel">Cancelar</button>
+              <button type="submit" class="button primary">Gerar e Copiar</button>
+            </div>
+          </form>
+          <div id="contrato-gerado" class="hidden">
+            <h3>Contrato Gerado (copiado para a área de transferência)</h3>
+            <pre id="contrato-texto"></pre>
+            <button class="button secondary" onclick="copiarContrato()">Copiar Novamente</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA: MARKETING -->
+    <section class="tab-panel" id="tab-marketing">
+      <div class="panel-header">
+        <h1>Marketing & Redes Sociais</h1>
+        <p class="subtitle">Bios, planejamento e assets</p>
+      </div>
+
+      <div class="marketing-grid">
+        <article class="marketing-card">
+          <div class="marketing-icon">📱</div>
+          <h3>Bio Instagram</h3>
+          <p>Duas opções prontas + configurações de perfil (nome, @, link na bio, destaques).</p>
+          <button class="button secondary" onclick="abrirArquivo('../03_Marketing_e_Redes/bios/bio-instagram.md')">Ver / Editar</button>
+          <button class="button primary" onclick="copiarBio('instagram')">Copiar Opção 1</button>
+        </article>
+
+        <article class="marketing-card">
+          <div class="marketing-icon">💼</div>
+          <h3>Bio LinkedIn</h3>
+          <p>Tagline, seção "Sobre nós", dados da página, especialidades e primeira publicação sugerida.</p>
+          <button class="button secondary" onclick="abrirArquivo('../03_Marketing_e_Redes/bios/bio-linkedin.md')">Ver / Editar</button>
+          <button class="button primary" onclick="copiarBio('linkedin')">Copiar Tagline</button>
+        </article>
+
+        <article class="marketing-card">
+          <div class="marketing-icon">📅</div>
+          <h3>Planejamento de Posts</h3>
+          <p>Pasta para calendário editorial, ideias de conteúdo, templates de legenda e agendamento.</p>
+          <button class="button secondary" onclick="abrirArquivo('../03_Marketing_e_Redes/planejamento-posts/')">Abrir Pasta</button>
+        </article>
+
+        <article class="marketing-card">
+          <div class="marketing-icon">🎯</div>
+          <h3>Roteiro de Prospecção</h3>
+          <p>Nichos-quente, mensagens de abertura, follow-up (D+2, D+5, D+10), diagnóstico de 3 perguntas e metas.</p>
+          <button class="button secondary" onclick="abrirArquivo('../06_Prospeccao/roteiro-prospeccao.md')">Ver Roteiro</button>
+          <button class="button primary" onclick="copiarMensagemAbertura()">Copiar Msg. Abertura</button>
+        </article>
+
+        <article class="marketing-card">
+          <div class="marketing-icon">📊</div>
+          <h3>Pipeline CSV</h3>
+          <p>Planilha de controle de leads: data, nome, nicho, canal, status, valor, observações.</p>
+          <button class="button secondary" onclick="abrirArquivo('../06_Prospeccao/pipeline-leads.csv')">Abrir CSV</button>
+        </article>
+
+        <article class="marketing-card">
+          <div class="marketing-icon">🔗</div>
+          <h3>Link WhatsApp Oficial</h3>
+          <p>https://wa.me/5534991297581?text=Olá!%20Vim%20pelo%20site%20da%20Rinear%20Systems...</p>
+          <button class="button primary" onclick="copiarWhatsApp()">Copiar Link</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- ABA: IDENTIDADE VISUAL -->
+    <section class="tab-panel" id="tab-identidade">
+      <div class="panel-header">
+        <h1>Identidade Visual</h1>
+        <p class="subtitle">Cores, tipografia, logo e guidelines</p>
+      </div>
+
+      <div class="identity-grid">
+        <article class="identity-card">
+          <h3>Paleta de Cores</h3>
+          <div class="color-palette">
+            <div class="color-swatch" style="--c:#071d22"><span class="color-hex">#071d22</span><span class="color-name">Background Principal</span></div>
+            <div class="color-swatch" style="--c:#0a272d"><span class="color-hex">#0a272d</span><span class="color-name">Background Secundário</span></div>
+            <div class="color-swatch" style="--c:#eef3f0"><span class="color-hex">#eef3f0</span><span class="color-name">Texto Principal (Ink)</span></div>
+            <div class="color-swatch" style="--c:#94a7a7"><span class="color-hex">#94a7a7</span><span class="color-name">Texto Mudo</span></div>
+            <div class="color-swatch accent" style="--c:#ff5ba8"><span class="color-hex">#ff5ba8</span><span class="color-name">Rosa — Acento Primário</span></div>
+            <div class="color-swatch accent" style="--c:#8b5cff"><span class="color-hex">#8b5cff</span><span class="color-name">Roxo — Acento Secundário</span></div>
+            <div class="color-swatch accent" style="--c:#e6c866"><span class="color-hex">#e6c866</span><span class="color-name">Dourado — Destaque</span></div>
+            <div class="color-swatch" style="--c:rgba(255,255,255,.13)"><span class="color-hex">rgba(255,255,255,.13)</span><span class="color-name">Linhas / Bordas</span></div>
+          </div>
+        </article>
+
+        <article class="identity-card">
+          <h3>Tipografia</h3>
+          <div class="typo-samples">
+            <div class="typo-item">
+              <span class="typo-label">Títulos / Display</span>
+              <span class="typo-value" style="font-family: 'DM Serif Display', serif;">DM Serif Display</span>
+            </div>
+            <div class="typo-item">
+              <span class="typo-label">Corpo / UI</span>
+              <span class="typo-value" style="font-family: 'Inter', sans-serif;">Inter (400, 500, 600, 700)</span>
+            </div>
+            <div class="typo-item">
+              <span class="typo-label">Escala (mobile → desktop)</span>
+              <span class="typo-value">Hero: clamp(53px, 7vw, 108px) · H2: clamp(42px, 5.2vw, 78px) · H3: 30–37px · Body: 13–16px · Small: 8–10px</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="identity-card">
+          <h3>Logo & Elementos</h3>
+          <div class="logo-preview">
+            <div class="logo-mark"><span>R</span><i>S</i></div>
+            <p class="logo-desc">Monograma R+S em Serifada; "S" em rosa (#ff5ba8). Usar em fundos escuros.</p>
+          </div>
+          <div class="logo-files">
+            <a class="button secondary" href="../02_Identidade_Visual/logo-ref.png" target="_blank">Ver logo-ref.png</a>
+            <a class="button secondary" href="../01_Site/v2-atual/logo-ref.png" target="_blank">Ver logo do site</a>
+          </div>
+        </article>
+
+        <article class="identity-card">
+          <h3>Estilo & Diretrizes</h3>
+          <ul class="guidelines">
+            <li><strong>Fundo:</strong> Escuro (preto/verde-petróleo) — nunca branco puro</li>
+            <li><strong>Espaçamento:</strong> Generoso, editorial, "respiração" entre blocos</li>
+            <li><strong>Glass/Overlay:</strong> Cards com <code>backdrop-filter: blur()</code> e borda sutil <code>rgba(255,255,255,.13)</code></li>
+            <li><strong>Gradientes:</strong> Rosa → Roxo (primário), Roxo → Petróleo (secundário), Rosa → Dourado (CTA)</li>
+            <li><strong>Animações:</strong> Reveal on scroll (IntersectionObserver), hover lift nos cards, glow no cursor</li>
+            <li><strong>Ícones:</strong> Minimalistas, traço fino, setas (↗) como elemento direcional</li>
+            <li><strong>Fotografia:</strong> Evitar stock photos genéricas; preferir screenshots reais de projetos</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="shell">
+    <a class="brand footer-brand" href="#inicio"><span>R</span><i>S</i></a>
+    <p>RINEAR SYSTEMS © <span id="year"></span></p>
+    <p>IDEIAS EM SISTEMAS REAIS — Painel Interno</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
