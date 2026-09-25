@@ -7,6 +7,8 @@ let leadDetalhado = null;
 
 // ===== INICIALIZAÇÃO =====
 document.addEventListener('DOMContentLoaded', () => {
+  // Garante que nenhum modal abra no load (bug de especificidade CSS resolvido + cinto-e-suspensórios)
+  document.querySelectorAll('.modal').forEach(m => m.classList.add('hidden'));
   initTabs();
   initCursorGlow();
   initYear();

@@ -344,7 +344,7 @@ body:before{
 .rules-box ul{margin:0;padding-left:20px;color:var(--muted)}
 .rules-box li{margin:8px 0}
 .rules-box strong{color:var(--ink)}
-.hidden{display:none}
+.hidden{display:none !important}
 
 /* KANBAN */
 .kanban-board{
