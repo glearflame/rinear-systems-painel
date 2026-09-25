@@ -71,7 +71,7 @@
           <a class="button primary" href="#pipeline" onclick="switchTab('pipeline')">Novo Lead</a>
           <a class="button secondary" href="#precos" onclick="switchTab('precos')">Ver Tabela de Preços</a>
           <a class="button secondary" href="#contratos" onclick="switchTab('contratos')">Gerar Contrato</a>
-          <a class="button ghost" target="_blank" href="../01_Site/v2-atual/index.html">Ver Site Público</a>
+          <button class="button ghost" data-action="open-site">Ver Site Público</button>
         </div>
       </div>
 
@@ -297,6 +297,15 @@
               <input type="number" name="valor" min="0" step="1" placeholder="Ex: 2497" />
             </div>
             <div class="form-row">
+              <label>Status Inicial</label>
+              <select name="status">
+                <option value="contato">Contato Inicial</option>
+                <option value="respondeu">Respondeu</option>
+                <option value="proposta">Proposta Enviada</option>
+                <option value="followup">Follow-up</option>
+              </select>
+            </div>
+            <div class="form-row">
               <label>Observações</label>
               <textarea name="observacoes" rows="3" placeholder="Contexto da conversa, dores do cliente, próximos passos..."></textarea>
             </div>
@@ -337,7 +346,7 @@
           <div class="contract-icon">📋</div>
           <h3>Modelo Padrão</h3>
           <p>Contrato de prestação de serviços com cláusulas de escopo, pagamento, prazos, revisões, direitos autorais e rescisão.</p>
-          <a class="button secondary" href="../05_Contratos/modelos/contrato-prestacao-servicos.md" target="_blank">Abrir Modelo (Markdown)</a>
+          <button class="button secondary" data-action="open-modelo-contrato">Abrir Modelo (Markdown)</button>
         </article>
 
         <article class="contract-card">
@@ -351,7 +360,7 @@
           <div class="contract-icon">📁</div>
           <h3>Contratos Assinados</h3>
           <p>Arquivos PDF/assinados organizados por cliente na pasta <code>05_Contratos/assinados/clientes/</code></p>
-          <a class="button secondary" href="../05_Contratos/assinados/clientes/" target="_blank">Abrir Pasta</a>
+          <button class="button secondary" data-action="open-pasta-assinados">Abrir Pasta</button>
         </article>
       </div>
 
@@ -422,7 +431,7 @@
           <div id="contrato-gerado" class="hidden">
             <h3>Contrato Gerado (copiado para a área de transferência)</h3>
             <pre id="contrato-texto"></pre>
-            <button class="button secondary" onclick="copiarContrato()">Copiar Novamente</button>
+            <button class="button secondary" id="btn-copiar-contrato">Copiar Novamente</button>
           </div>
         </div>
       </div>
@@ -440,45 +449,45 @@
           <div class="marketing-icon">📱</div>
           <h3>Bio Instagram</h3>
           <p>Duas opções prontas + configurações de perfil (nome, @, link na bio, destaques).</p>
-          <button class="button secondary" onclick="abrirArquivo('../03_Marketing_e_Redes/bios/bio-instagram.md')">Ver / Editar</button>
-          <button class="button primary" onclick="copiarBio('instagram')">Copiar Opção 1</button>
+          <button class="button secondary" data-action="view-doc" data-doc="bio-instagram">Ver Bio</button>
+          <button class="button primary" data-action="copy-bio" data-bio="instagram">Copiar Opção 1</button>
         </article>
 
         <article class="marketing-card">
           <div class="marketing-icon">💼</div>
           <h3>Bio LinkedIn</h3>
           <p>Tagline, seção "Sobre nós", dados da página, especialidades e primeira publicação sugerida.</p>
-          <button class="button secondary" onclick="abrirArquivo('../03_Marketing_e_Redes/bios/bio-linkedin.md')">Ver / Editar</button>
-          <button class="button primary" onclick="copiarBio('linkedin')">Copiar Tagline</button>
+          <button class="button secondary" data-action="view-doc" data-doc="bio-linkedin">Ver Bio</button>
+          <button class="button primary" data-action="copy-bio" data-bio="linkedin">Copiar Tagline</button>
         </article>
 
         <article class="marketing-card">
           <div class="marketing-icon">📅</div>
           <h3>Planejamento de Posts</h3>
           <p>Pasta para calendário editorial, ideias de conteúdo, templates de legenda e agendamento.</p>
-          <button class="button secondary" onclick="abrirArquivo('../03_Marketing_e_Redes/planejamento-posts/')">Abrir Pasta</button>
+          <button class="button secondary" data-action="open-pasta-posts">Abrir Pasta</button>
         </article>
 
         <article class="marketing-card">
           <div class="marketing-icon">🎯</div>
           <h3>Roteiro de Prospecção</h3>
           <p>Nichos-quente, mensagens de abertura, follow-up (D+2, D+5, D+10), diagnóstico de 3 perguntas e metas.</p>
-          <button class="button secondary" onclick="abrirArquivo('../06_Prospeccao/roteiro-prospeccao.md')">Ver Roteiro</button>
-          <button class="button primary" onclick="copiarMensagemAbertura()">Copiar Msg. Abertura</button>
+          <button class="button secondary" data-action="view-doc" data-doc="roteiro">Ver Roteiro</button>
+          <button class="button primary" data-action="copy-abertura">Copiar Msg. Abertura</button>
         </article>
 
         <article class="marketing-card">
           <div class="marketing-icon">📊</div>
           <h3>Pipeline CSV</h3>
           <p>Planilha de controle de leads: data, nome, nicho, canal, status, valor, observações.</p>
-          <button class="button secondary" onclick="abrirArquivo('../06_Prospeccao/pipeline-leads.csv')">Abrir CSV</button>
+          <button class="button secondary" data-action="open-csv">Abrir CSV</button>
         </article>
 
         <article class="marketing-card">
           <div class="marketing-icon">🔗</div>
           <h3>Link WhatsApp Oficial</h3>
           <p>https://wa.me/5534991297581?text=Olá!%20Vim%20pelo%20site%20da%20Rinear%20Systems...</p>
-          <button class="button primary" onclick="copiarWhatsApp()">Copiar Link</button>
+          <button class="button primary" data-action="copy-wa">Copiar Link</button>
         </article>
       </div>
     </section>
@@ -530,8 +539,8 @@
             <p class="logo-desc">Monograma R+S em Serifada; "S" em rosa (#ff5ba8). Usar em fundos escuros.</p>
           </div>
           <div class="logo-files">
-            <a class="button secondary" href="../02_Identidade_Visual/logo-ref.png" target="_blank">Ver logo-ref.png</a>
-            <a class="button secondary" href="../01_Site/v2-atual/logo-ref.png" target="_blank">Ver logo do site</a>
+            <button class="button secondary" data-action="open-logo-ref">Ver logo-ref.png</button>
+            <button class="button secondary" data-action="open-logo-site">Ver logo do site</button>
           </div>
         </article>
 
@@ -550,6 +559,21 @@
       </div>
     </section>
   </main>
+
+  <!-- Modal Doc Viewer -->
+  <div class="modal hidden" id="modal-doc">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content large">
+      <div class="modal-header">
+        <h2 id="doc-titulo">Documento</h2>
+        <button class="modal-close" aria-label="Fechar">✕</button>
+      </div>
+      <div class="doc-body"><pre id="doc-conteudo"></pre></div>
+      <div class="modal-footer">
+        <button class="button primary" id="btn-copiar-doc">Copiar Conteúdo</button>
+      </div>
+    </div>
+  </div>
 
   <footer class="shell">
     <a class="brand footer-brand" href="#inicio"><span>R</span><i>S</i></a>

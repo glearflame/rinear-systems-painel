@@ -693,3 +693,26 @@ footer{
   .kanban-column{flex:none;width:100%;min-height:auto}
   .footer-brand{display:none}
 }
+/* DOC VIEWER */
+.doc-body{padding:20px 24px}
+.doc-body pre{
+  background:rgba(0,0,0,.3);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:16px;
+  font-family:var(--sans);
+  font-size:13px;
+  line-height:1.7;
+  white-space:pre-wrap;
+  word-wrap:break-word;
+  max-height:55vh;
+  overflow-y:auto;
+  color:var(--ink);
+  margin:0;
+}
+/* Detalhes grid (modal lead) */
+.detalhe-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:20px 24px}
+.detalhe-item{display:flex;flex-direction:column;gap:4px}
+.detalhe-item.full{grid-column:1/-1}
+.detalhe-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted2)}
+.detalhe-value{font-size:14px;color:var(--ink)}

@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initModals();
   initKanbanClick();
   initForms();
+  initAcoes();
 });
 
 // ===== TABS =====
@@ -66,34 +67,27 @@ function initYear() {
   if (el) el.textContent = new Date().getFullYear();
 }
 
-// ===== CARREGAR PIPELINE DO CSV =====
+// ===== CARREGAR PIPELINE (CSV embutido + localStorage) =====
 async function carregarPipeline() {
-  try {
-    // Tentar carregar do arquivo local (via fetch relativo)
-    const resp = await fetch('../06_Prospeccao/pipeline-leads.csv');
-    if (!resp.ok) throw new Error('CSV não encontrado');
-    const texto = await resp.text();
-    leads = parseCSV(texto);
-    renderPipeline();
-    atualizarMetricas();
-    atualizarAtividadeRecente();
-  } catch (e) {
-    console.warn('Não foi possível carregar CSV local, usando localStorage:', e);
-    // Fallback: localStorage
-    const salvo = localStorage.getItem('rinear-pipeline');
-    if (salvo) {
-      leads = JSON.parse(salvo);
-      renderPipeline();
-      atualizarMetricas();
-      atualizarAtividadeRecente();
-    } else {
-      // Dados de exemplo vazios
-      leads = [];
-      renderPipeline();
-      atualizarMetricas();
-      atualizarAtividadeRecente();
+  // Ordem: localStorage (mais recente) > CSV embutido no HTML > CSV via fetch
+  const salvo = localStorage.getItem('rinear-pipeline');
+  if (salvo) {
+    try { leads = JSON.parse(salvo); if (!Array.isArray(leads)) leads = []; } catch { leads = []; }
+  } else {
+    // CSV embutido (deploy Cloudflare: não há ../06_Prospeccao)
+    const csvEl = document.getElementById('pipeline-csv');
+    if (csvEl) leads = parseCSV(csvEl.textContent);
+    else {
+      try {
+        const resp = await fetch('pipeline-leads.csv');
+        if (resp.ok) leads = parseCSV(await resp.text());
+      } catch (e) { leads = []; }
     }
   }
+  if (!Array.isArray(leads)) leads = [];
+  renderPipeline();
+  atualizarMetricas();
+  atualizarAtividadeRecente();
 }
 
 function parseCSV(texto) {
@@ -330,11 +324,12 @@ function abrirModalLead(lead = null, statusInicial = 'contato') {
     form.contato.value = lead.contato || '';
     form.valor.value = lead.valor_proposto || '';
     form.observacoes.value = lead.observacoes || '';
-  } else {
-    // Pré-preencher status via hidden field se quiser
+    if (form.status) form.status.value = lead.status || 'contato';
+  } else if (form.status) {
+    form.status.value = statusInicial;
   }
   modal.classList.remove('hidden');
-  form.nome.focus();
+  setTimeout(() => form.nome.focus(), 50);
 }
 
 function fecharModal(modal) {
@@ -445,7 +440,7 @@ function initForms() {
       contato: fd.get('contato'),
       valor_proposto: fd.get('valor') || '',
       observacoes: fd.get('observacoes'),
-      status: leadEditando?.status || 'contato',
+      status: leadEditando?.status || (formLead.querySelector('[name="status"]')?.value) || 'contato',
       data: leadEditando?.data || new Date().toISOString().split('T')[0],
       ultimo_contato: new Date().toISOString().split('T')[0]
     };
@@ -532,74 +527,211 @@ Rinear Systems (Contratada)                                          ${fd.get('c
   });
 }
 
-function copiarContrato() {
-  const texto = document.getElementById('contrato-texto').textContent;
-  navigator.clipboard.writeText(texto);
-  const btn = event.target;
-  const original = btn.textContent;
-  btn.textContent = '✅ Copiado!';
-  setTimeout(() => btn.textContent = original, 2000);
-}
-
-// ===== MARKETING COPY =====
-function abrirArquivo(caminho) {
-  // Tenta abrir via protocolo file: (pode não funcionar no browser por segurança)
-  // Melhor: copiar o caminho para a área de transferência
-  navigator.clipboard.writeText(caminho).then(() => {
-    alert(`Caminho copiado: ${caminho}\n\nCole no Explorer (Win+E) ou no terminal para abrir.`);
-  });
-}
-
-function copiarBio(tipo) {
-  const bios = {
-    instagram: `Rinear Systems ✦ Web Studio
+// ===== MARKETING / DOCS / AÇÕES (delegação + embeds) — funciona em file:// e Cloudflare Pages =====
+const RINEAR = {
+  links: {
+    site: 'https://github.com/glearflame/rinear-systems-site',
+    painel: 'https://github.com/glearflame/rinear-systems-painel',
+    wa: 'https://wa.me/5534991297581?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Rinear%20Systems%20e%20gostaria%20de%20falar%20sobre%20um%20projeto'
+  },
+  docs: {
+    'bio-instagram': {
+      titulo: 'Bio Instagram — Rinear Systems',
+      texto: `Opção 1 (recomendada):
+Rinear Systems ✦ Web Studio
 Ideias em sistemas reais.
 Landing pages & sites institucionais
 modernos, rápidos e responsivos.
-📲 Peça seu projeto pelo WhatsApp ↓`,
-    linkedin: `Landing pages e sites institucionais modernos, rápidos e responsivos. Ideias em sistemas reais.`
-  };
-  navigator.clipboard.writeText(bios[tipo]).then(() => {
-    const btn = event.target;
-    const original = btn.textContent;
-    btn.textContent = '✅ Copiado!';
-    setTimeout(() => btn.textContent = original, 2000);
-  });
+📲 Peça seu projeto pelo WhatsApp ↓
+
+Opção 2 (editorial):
+RINEAR SYSTEMS
+Ideias que ganham presença.
+✦ Landing Pages de conversão
+✦ Sites Institucionais
+Seu site pode estar aqui ↓
+
+Informações do perfil:
+- Nome de exibição: Rinear Systems | Sites & Landing Pages
+- Usuário sugerido: @rinear.systems (verificar disponibilidade)
+- Link na bio: https://wa.me/5534991297581?text=Olá!%20Vim%20pelo%20Instagram%20da%20Rinear%20Systems
+- Categoria: Serviço de design / Empresa de software
+- Destaques sugeridos: Portfólio | Processo | Orçamento | Feedbacks`
+    },
+    'bio-linkedin': {
+      titulo: 'LinkedIn — Página de Empresa',
+      texto: `Tagline (até 120 caracteres):
+Landing pages e sites institucionais modernos, rápidos e responsivos. Ideias em sistemas reais.
+
+Sobre nós:
+A Rinear Systems é um web studio focado em transformar marcas em presença digital real.
+
+Criamos landing pages e sites institucionais modernos, rápidos e responsivos — projetos pensados para empresas e profissionais que entendem que um site não é só um endereço na internet: é a primeira impressão do negócio.
+
+O que fazemos:
+✦ Landing Pages — páginas de conversão que conduzem o visitante até a ação
+✦ Sites Institucionais — presença digital completa que transmite confiança desde o primeiro clique
+
+Nosso processo:
+1. Direção — entendemos sua marca, objetivo e público
+2. Construção — design e desenvolvimento em uma experiência responsiva
+3. Entrega — revisão, publicação e tudo pronto para usar
+
+📲 Atendimento direto pelo WhatsApp: (34) 99129-7581
+
+Ideias em sistemas reais.
+
+Dados da página:
+- Setor: Desenvolvimento de software / Design
+- Tamanho: 1–10 funcionários
+- Especialidades: Web Design, Landing Pages, Sites Institucionais, UX/UI, Desenvolvimento Web`
+    },
+    'roteiro': {
+      titulo: 'Roteiro de Prospecção — Primeiros Clientes',
+      texto: `Quem prospectar (nichos-quente em Uberlândia/região):
+1. Clínicas e consultórios (estética, odonto, psicólogos)
+2. Profissionais liberais (advogados, contadores, arquitetos, personal trainers)
+3. Comércios locais sem site ou com site antigo
+4. Infoprodutores e lançamentos (precisam de LP de captura)
+5. Eventos locais (LP de inscrição)
+
+Onde encontrar:
+- Instagram: buscar nichos + cidade; perfis sem link na bio
+- Google Maps: empresas com boas avaliações mas sem site
+- Indicações (programa de R$ 150 de crédito)
+- Grupos de Facebook/WhatsApp de empreendedores locais
+
+Mensagem de abertura (botão "Copiar Msg. Abertura" copia pronta).
+
+Follow-up:
+- D+2: "passando só pra ver se fez sentido pra você 🙂"
+- D+5: enviar mockup/exemplo do mesmo nicho
+- D+10: última mensagem com prazo da condição de lançamento
+- Depois: "frio" e retomar em 60 dias.
+
+Diagnóstico de 3 perguntas:
+1. Hoje, quando alguém procura vocês no Google, o que encontra?
+2. Vocês recebem pedidos de orçamento pelo Instagram que um site responderia sozinho?
+3. Se o site ideal existisse, o que ele precisaria ter?
+
+Metas: 10 contatos/dia × 5 dias · ~20% respondem · 2–3 clientes/mês.`
+    },
+    'modelo-contrato': {
+      titulo: 'Modelo de Contrato de Prestação de Serviços',
+      texto: `Uso interno — revisar com advogado antes do primeiro uso.
+
+Cláusulas do modelo padrão:
+1ª — Objeto (LP ou Site Institucional, pacote + escopo do Anexo I)
+2ª — Preço e pagamento (50% entrada + 50% entrega, Pix)
+3ª — Prazo (conta do recebimento da entrada + material completo)
+4ª — Revisões (2 rodadas inclusas; extras a R$ 147)
+5ª — Obrigações da Contratada (qualidade, informação, entrega após quitação)
+6ª — Obrigações do Contratante (materiais no prazo; conteúdo sem violar direitos de terceiros)
+7ª — Direitos autorais e portfólio (transferência após quitação; exibição no portfólio salvo oposição)
+8ª — Rescisão (valores pagos não devolvidos em desistência; rescisão por inadimplência com aviso de 5 dias)
+9ª — Foro (comarca de Uberlândia/MG)
+
+Use a aba Contratos → "Gerar Novo Contrato" para preencher um modelo completo e copiar pronto.`
+    }
+  },
+  copiar: {
+    'bio-instagram': 'Rinear Systems ✦ Web Studio\nIdeias em sistemas reais.\nLanding pages & sites institucionais\nmodernos, rápidos e responsivos.\n📲 Peça seu projeto pelo WhatsApp ↓',
+    'bio-linkedin': 'Landing pages e sites institucionais modernos, rápidos e responsivos. Ideias em sistemas reais.',
+    'abertura': 'Oi, [nome]! Tudo bem? Sou da Rinear Systems, um estúdio aqui da região focado em sites e landing pages.\n\nVi o perfil da [empresa] e achei o trabalho de vocês muito bom — mas percebi que [vocês não têm site / o link da bio leva para X].\n\nEstou selecionando alguns negócios locais para montar meu portfólio de lançamento, com uma condição especial pros primeiros 5 clientes. Posso te mandar uma proposta rapidinha de como ficaria o site da [empresa]? Sem compromisso 🙂',
+    'wa': 'https://wa.me/5534991297581?text=Ol%C3%A1!%20Vim%20pelo%20site%20da%20Rinear%20Systems%20e%20gostaria%20de%20falar%20sobre%20um%20projeto'
+  }
+};
+
+function feedbackBtn(btn, okText) {
+  if (!btn) return;
+  const original = btn.textContent;
+  btn.textContent = okText;
+  setTimeout(() => { btn.textContent = original; }, 2000);
 }
 
-function copiarMensagemAbertura() {
-  const msg = `Oi, [nome]! Tudo bem? Sou da Rinear Systems, um estúdio aqui da região focado em sites e landing pages.
-
-Vi o perfil da [empresa] e achei o trabalho de vocês muito bom — mas percebi que [vocês não têm site / o link da bio leva para X].
-
-Estou selecionando alguns negócios locais para montar meu portfólio de lançamento, com uma **condição especial pros primeiros 5 clientes**. Posso te mandar uma proposta rapidinha de como ficaria o site da [empresa]? Sem compromisso 🙂`;
-  navigator.clipboard.writeText(msg).then(() => {
-    const btn = event.target;
-    const original = btn.textContent;
-    btn.textContent = '✅ Copiado!';
-    setTimeout(() => btn.textContent = original, 2000);
-  });
+function copiarTexto(texto, btn) {
+  const done = () => feedbackBtn(btn, '✅ Copiado!');
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(texto).then(done).catch(() => copiarFallback(texto, done));
+  } else {
+    copiarFallback(texto, done);
+  }
+}
+function copiarFallback(texto, done) {
+  const ta = document.createElement('textarea');
+  ta.value = texto;
+  ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); } catch {}
+  document.body.removeChild(ta);
+  done();
 }
 
-function copiarWhatsApp() {
-  const link = 'https://wa.me/5534991297581?text=Olá!%20Vim%20pelo%20site%20da%20Rinear%20Systems%20e%20gostaria%20de%20falar%20sobre%20um%20projeto';
-  navigator.clipboard.writeText(link).then(() => {
-    const btn = event.target;
-    const original = btn.textContent;
-    btn.textContent = '✅ Copiado!';
-    setTimeout(() => btn.textContent = original, 2000);
-  });
+function abrirDoc(chave) {
+  const doc = RINEAR.docs[chave];
+  if (!doc) return;
+  const modal = document.getElementById('modal-doc');
+  document.getElementById('doc-titulo').textContent = doc.titulo;
+  document.getElementById('doc-conteudo').textContent = doc.texto;
+  modal.dataset.docKey = chave;
+  modal.classList.remove('hidden');
 }
 
-// ===== UTILITÁRIOS =====
-function escapeHtml(str) {
-  if (!str) return '';
-  return String(str)
-    .replace(/&/g, '&')
-    .replace(/</g, '<')
-    .replace(/>/g, '>')
-    .replace(/"/g, '"')
-    .replace(/'/g, '&#039;');
+function initAcoes() {
+  // Delegação: qualquer botão com data-action
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    const a = btn.dataset.action;
+    switch (a) {
+      case 'open-site':
+        window.open(RINEAR.links.site, '_blank', 'noopener');
+        break;
+      case 'open-modelo-contrato':
+        abrirDoc('modelo-contrato');
+        break;
+      case 'open-pasta-assinados':
+      case 'open-pasta-posts':
+        copiarTexto('C:\\Users\\lonw wys\\Documents\\Rinear Systems\\' +
+          (a === 'open-pasta-posts' ? '03_Marketing_e_Redes\\planejamento-posts' : '05_Contratos\\assinados\\clientes'), btn);
+        break;
+      case 'view-doc':
+        abrirDoc(btn.dataset.doc);
+        break;
+      case 'copy-bio':
+        copiarTexto(RINEAR.copiar[btn.dataset.bio === 'linkedin' ? 'bio-linkedin' : 'bio-instagram'], btn);
+        break;
+      case 'copy-abertura':
+        copiarTexto(RINEAR.copiar['abertura'], btn);
+        break;
+      case 'open-csv':
+        copiarTexto('C:\\Users\\lonw wys\\Documents\\Rinear Systems\\06_Prospeccao\\pipeline-leads.csv', btn);
+        break;
+      case 'copy-wa':
+        copiarTexto(RINEAR.links.wa, btn);
+        break;
+      case 'open-logo-ref':
+      case 'open-logo-site':
+        copiarTexto('C:\\Users\\lonw wys\\Documents\\Rinear Systems\\' +
+          (a === 'open-logo-ref' ? '02_Identidade_Visual\\logo-ref.png' : '01_Site\\v2-atual\\logo-ref.png'), btn);
+        break;
+    }
+  });
+
+  // Modal doc viewer
+  const modalDoc = document.getElementById('modal-doc');
+  modalDoc?.querySelector('.modal-close')?.addEventListener('click', () => fecharModal(modalDoc));
+  modalDoc?.querySelector('.modal-backdrop')?.addEventListener('click', () => fecharModal(modalDoc));
+  document.getElementById('btn-copiar-doc')?.addEventListener('click', function () {
+    const conteudo = document.getElementById('doc-conteudo').textContent;
+    copiarTexto(conteudo, this);
+  });
+
+  // Copiar contrato gerado
+  document.getElementById('btn-copiar-contrato')?.addEventListener('click', function () {
+    copiarTexto(document.getElementById('contrato-texto').textContent, this);
+  });
 }
 
 function formatDataBR(dataStr) {
