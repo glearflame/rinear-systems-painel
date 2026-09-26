@@ -173,6 +173,12 @@ function createLeadCard(lead) {
     tag.textContent = lead.canal;
     meta.appendChild(tag);
   }
+  if (lead.contato) {
+    const s = document.createElement('span');
+    const ehTel = /[0-9]{8,}/.test(lead.contato);
+    s.textContent = (ehTel ? '📱 ' : '📸 ') + lead.contato;
+    meta.appendChild(s);
+  }
 
   card.appendChild(header);
   card.appendChild(meta);
@@ -381,7 +387,31 @@ function abrirDetalhesLead(lead) {
   if (lead.nicho) addItem('Nicho', lead.nicho);
   if (lead.cidade) addItem('Cidade', lead.cidade);
   if (lead.canal) addItem('Canal', lead.canal);
-  if (lead.contato) addItem('Contato', lead.contato);
+  if (lead.contato) {
+    addItem('Contato', lead.contato);
+    // Botão de ação: WhatsApp se for telefone, Instagram se for @
+    const digits = lead.contato.replace(/\D/g, '');
+    let url = null, txt = null;
+    if (digits.length >= 10) {
+      const num = digits.length <= 11 ? '55' + digits : digits;
+      url = `https://wa.me/${num}?text=${encodeURIComponent('Oi! Tudo bem? Sou da Rinear Systems, estúdio de sites aqui da região 🙌')}`;
+      txt = '📱 Chamar no WhatsApp';
+    } else if (lead.contato.startsWith('@')) {
+      url = `https://instagram.com/${lead.contato.slice(1)}`;
+      txt = '📸 Abrir Instagram';
+    }
+    if (url) {
+      const item = document.createElement('div');
+      item.className = 'detalhe-item full';
+      const btn = document.createElement('a');
+      btn.href = url; btn.target = '_blank'; btn.rel = 'noopener';
+      btn.className = 'btn btn-primary';
+      btn.style.cssText = 'width:100%;text-align:center;margin-top:4px';
+      btn.textContent = txt;
+      item.appendChild(btn);
+      grid.appendChild(item);
+    }
+  }
   if (lead.valor_proposto) addItem('Valor Proposto', 'R$ ' + Number(lead.valor_proposto).toLocaleString('pt-BR'), true);
   if (lead.observacoes) addItem('Observações', lead.observacoes, false, true);
   addItem('Criado em', formatDataBR(lead.data));
