@@ -102,7 +102,9 @@ function parseCSV(texto) {
     headers.forEach((h, i) => obj[h] = vals[i] || '');
     // Garantir campos padrão
     if (!obj.id) obj.id = 'lead-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6);
-    if (!obj.status) obj.status = 'contato';
+    // Mapeia status do pipeline-leads.csv (06_Prospeccao) pro kanban do painel
+    const STATUS_MAP = { novo: 'contato', contato: 'contato', respondeu: 'respondeu', proposta: 'proposta', 'follow-up': 'followup', followup: 'followup', fechado: 'fechado', frio: 'frio' };
+    obj.status = STATUS_MAP[(obj.status || '').toLowerCase()] || 'contato';
     if (!obj.data) obj.data = new Date().toISOString().split('T')[0];
     return obj;
   });
