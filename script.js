@@ -93,11 +93,26 @@ async function carregarPipeline() {
 }
 
 function parseCSV(texto) {
-  const linhas = texto.trim().split('\n');
+  // Parser CSV que respeita aspas: "Uberlândia, MG" é UMA célula
+  function parseLinha(linha) {
+    const vals = [];
+    let cur = '', dentro = false;
+    for (let i = 0; i < linha.length; i++) {
+      const c = linha[i];
+      if (c === '"') {
+        if (dentro && linha[i + 1] === '"') { cur += '"'; i++; } // "" escapado
+        else dentro = !dentro;
+      } else if (c === ',' && !dentro) { vals.push(cur); cur = ''; }
+      else cur += c;
+    }
+    vals.push(cur);
+    return vals.map(v => v.trim());
+  }
+  const linhas = texto.trim().split(/\r?\n/);
   if (linhas.length <= 1) return [];
-  const headers = linhas[0].split(',').map(h => h.trim());
+  const headers = parseLinha(linhas[0]).map(h => h.trim());
   return linhas.slice(1).map(linha => {
-    const vals = linha.split(',').map(v => v.trim());
+    const vals = parseLinha(linha);
     const obj = {};
     headers.forEach((h, i) => obj[h] = vals[i] || '');
     // Garantir campos padrão
