@@ -73,7 +73,16 @@ function initYear() {
 async function carregarPipeline() {
   // Ordem: localStorage (mais recente) > CSV embutido no HTML > CSV via fetch
   const salvo = localStorage.getItem('rinear-pipeline');
+  // Migração v2: versões antigas marcaram tudo como "fechado" por engano.
+  // Se TODOS os leads estão "fechado", força releitura do CSV.
+  let migrar = false;
   if (salvo) {
+    try {
+      const tmp = JSON.parse(salvo);
+      migrar = Array.isArray(tmp) && tmp.length > 0 && tmp.every(l => l.status === 'fechado');
+    } catch {}
+  }
+  if (salvo && !migrar) {
     try { leads = JSON.parse(salvo); if (!Array.isArray(leads)) leads = []; } catch { leads = []; }
   } else {
     // CSV embutido (deploy Cloudflare: não há ../06_Prospeccao)
