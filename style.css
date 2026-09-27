@@ -233,6 +233,7 @@ body:before{
 }
 .activity-dot.novo{background:var(--pink)}
 .activity-dot.ativo{background:var(--violet)}
+.activity-dot.enviado{background:var(--pink)}
 .activity-dot.fechado{background:var(--green)}
 .activity-dot.frio{background:var(--muted2)}
 .activity-text{flex:1;font-size:13px;color:var(--ink)}

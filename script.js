@@ -127,7 +127,7 @@ function parseCSV(texto) {
     // Garantir campos padrão
     if (!obj.id) obj.id = 'lead-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6);
     // Mapeia status do pipeline-leads.csv (06_Prospeccao) pro kanban do painel
-    const STATUS_MAP = { novo: 'contato', contato: 'contato', respondeu: 'respondeu', proposta: 'proposta', 'follow-up': 'followup', followup: 'followup', fechado: 'fechado', frio: 'frio' };
+    const STATUS_MAP = { novo: 'contato', contato: 'contato', enviado: 'enviado', 'mensagem-inicial': 'enviado', 'mensagem inicial': 'enviado', 'msg-inicial': 'enviado', respondeu: 'respondeu', proposta: 'proposta', 'follow-up': 'followup', followup: 'followup', fechado: 'fechado', frio: 'frio' };
     obj.status = STATUS_MAP[(obj.status || '').toLowerCase()] || 'contato';
     if (!obj.data) obj.data = new Date().toISOString().split('T')[0];
     return obj;
@@ -142,7 +142,7 @@ function salvarPipeline() {
 
 // ===== RENDER KANBAN =====
 function renderPipeline() {
-  const statusOrder = ['contato', 'respondeu', 'proposta', 'followup', 'fechado', 'frio'];
+  const statusOrder = ['contato', 'enviado', 'respondeu', 'proposta', 'followup', 'fechado', 'frio'];
   statusOrder.forEach(status => {
     const col = document.getElementById(`col-${status}`);
     const countEl = document.getElementById(`count-${status}`);
@@ -255,6 +255,7 @@ function atualizarAtividadeRecente() {
   recentes.forEach(lead => {
     const statusLabels = {
       contato: 'Novo contato',
+      enviado: 'Msg inicial enviada',
       respondeu: 'Respondeu',
       proposta: 'Proposta enviada',
       followup: 'Em follow-up',
@@ -263,6 +264,7 @@ function atualizarAtividadeRecente() {
     };
     const statusColors = {
       contato: 'novo',
+      enviado: 'enviado',
       respondeu: 'ativo',
       proposta: 'ativo',
       followup: 'ativo',
@@ -379,6 +381,7 @@ function abrirDetalhesLead(lead) {
 
   const statusLabels = {
     contato: 'Contato Inicial',
+    enviado: 'Msg Inicial Enviada',
     respondeu: 'Respondeu',
     proposta: 'Proposta Enviada',
     followup: 'Follow-up',
@@ -459,7 +462,7 @@ function abrirDetalhesLead(lead) {
 
 function avancarLead() {
   if (!leadDetalhado) return;
-  const ordem = ['contato', 'respondeu', 'proposta', 'followup', 'fechado'];
+  const ordem = ['contato', 'enviado', 'respondeu', 'proposta', 'followup', 'fechado'];
   const idx = ordem.indexOf(leadDetalhado.status);
   if (idx < ordem.length - 1) {
     leadDetalhado.status = ordem[idx + 1];
