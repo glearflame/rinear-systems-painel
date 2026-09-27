@@ -1,5 +1,35 @@
 /* ===== PAINEL RINEAR SYSTEMS — JS ===== */
 
+// ===== SUPABASE =====
+const SUPABASE_URL = 'https://ntzguazamuqhoggjcoqe.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_RZFu3MnWyTNCXS-t9WZF_w_BEHSJWxF';
+// Status no banco (novo, enviado...) -> status do kanban (contato, enviado...)
+const STATUS_TO_KANBAN = { novo: 'contato', contato: 'contato', enviado: 'enviado', respondeu: 'respondeu', proposta: 'proposta', followup: 'followup', 'follow-up': 'followup', fechado: 'fechado', frio: 'frio' };
+const STATUS_FROM_KANBAN = { contato: 'novo', enviado: 'enviado', respondeu: 'respondeu', proposta: 'proposta', followup: 'followup', fechado: 'fechado', frio: 'frio' };
+
+async function sbFetch(path, options = {}) {
+  const resp = await fetch(SUPABASE_URL + '/rest/v1/' + path, {
+    ...options,
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      Prefer: options.method && options.method !== 'GET' ? 'return=representation' : undefined,
+      ...(options.headers || {}),
+    },
+  });
+  if (!resp.ok) {
+    const err = await resp.text();
+    console.error('Supabase error:', resp.status, err);
+    throw new Error(err);
+  }
+  return resp.status === 204 ? null : resp.json();
+}
+// status vindo do banco -> status do kanban
+function mapLead(l) {
+  return { ...l, status: STATUS_TO_KANBAN[(l.status || '').toLowerCase()] || 'contato' };
+}
+
 // ===== ESTADO GLOBAL =====
 let leads = [];
 let leadEditando = null;
@@ -69,33 +99,19 @@ function initYear() {
   if (el) el.textContent = new Date().getFullYear();
 }
 
-// ===== CARREGAR PIPELINE (CSV embutido + localStorage) =====
+// ===== CARREGAR PIPELINE (Supabase) =====
 async function carregarPipeline() {
-  // Ordem: localStorage (mais recente) > CSV embutido no HTML > CSV via fetch
-  const salvo = localStorage.getItem('rinear-pipeline');
-  // Migração v2: versões antigas marcaram tudo como "fechado" por engano.
-  // Se TODOS os leads estão "fechado", força releitura do CSV.
-  let migrar = false;
-  if (salvo) {
-    try {
-      const tmp = JSON.parse(salvo);
-      migrar = Array.isArray(tmp) && tmp.length > 0 && tmp.every(l => l.status === 'fechado');
-    } catch {}
+  try {
+    const data = await sbFetch('leads?select=*&order=data.desc,created_at.desc');
+    leads = (Array.isArray(data) ? data : []).map(mapLead);
+    // Salva no localStorage pra modo offline rápido
+    try { localStorage.setItem('rinear-pipeline-supabase', JSON.stringify(leads)); } catch {}
+  } catch (e) {
+    console.warn('Supabase falhou, caindo pro localStorage:', e.message);
+    const salvo = localStorage.getItem('rinear-pipeline-supabase');
+    leads = salvo ? JSON.parse(salvo) : [];
+    if (!Array.isArray(leads)) leads = [];
   }
-  if (salvo && !migrar) {
-    try { leads = JSON.parse(salvo); if (!Array.isArray(leads)) leads = []; } catch { leads = []; }
-  } else {
-    // CSV embutido (deploy Cloudflare: não há ../06_Prospeccao)
-    const csvEl = document.getElementById('pipeline-csv');
-    if (csvEl) leads = parseCSV(csvEl.textContent);
-    else {
-      try {
-        const resp = await fetch('pipeline-leads.csv');
-        if (resp.ok) leads = parseCSV(await resp.text());
-      } catch (e) { leads = []; }
-    }
-  }
-  if (!Array.isArray(leads)) leads = [];
   renderPipeline();
   atualizarMetricas();
   atualizarAtividadeRecente();
@@ -134,10 +150,39 @@ function parseCSV(texto) {
   });
 }
 
+// Persiste no Supabase (e cache local pra fallback)
 function salvarPipeline() {
-  localStorage.setItem('rinear-pipeline', JSON.stringify(leads));
-  // Também tenta salvar no CSV (só funciona se tiver permissão de escrita via File System Access API)
-  // Por enquanto só localStorage
+  try { localStorage.setItem('rinear-pipeline-supabase', JSON.stringify(leads)); } catch {}
+}
+// Persiste UM lead (create/update) — usa id uuid quando veio do banco
+async function persistLead(lead) {
+  const payload = {
+    data: lead.data || null,
+    nome: lead.nome,
+    nicho: lead.nicho || null,
+    cidade: lead.cidade || null,
+    canal: lead.canal || null,
+    contato: lead.contato || null,
+    status: STATUS_FROM_KANBAN[lead.status] || 'novo',
+    valor_proposto: lead.valor_proposto ? Number(lead.valor_proposto) : null,
+    ultimo_contato: lead.ultimo_contato || null,
+    proximo_passo: lead.proximo_passo || null,
+    observacoes: lead.observacoes || null,
+  };
+  if (lead.id && String(lead.id).includes('-')) {
+    // uuid vindo do Supabase: update
+    await sbFetch(`leads?id=eq.${lead.id}`, { method: 'PATCH', body: JSON.stringify(payload) });
+  } else {
+    // create
+    const created = await sbFetch('leads', { method: 'POST', body: JSON.stringify(payload) });
+    if (Array.isArray(created) && created[0]) lead.id = created[0].id;
+  }
+  salvarPipeline();
+}
+async function deleteLead(lead) {
+  if (lead.id && String(lead.id).includes('-')) {
+    await sbFetch(`leads?id=eq.${lead.id}`, { method: 'DELETE' });
+  }
 }
 
 // ===== RENDER KANBAN =====
@@ -519,11 +564,16 @@ function initForms() {
   });
 }
 
-function salvarLead(lead) {
+async function salvarLead(lead) {
   const idx = leads.findIndex(l => l.id === lead.id);
   if (idx >= 0) leads[idx] = lead;
   else leads.push(lead);
-  salvarPipeline();
+  salvarPipeline(); // cache local imediato
+  try {
+    await persistLead(lead);
+  } catch (e) {
+    console.warn('Falha ao persistir no Supabase (cache local mantido):', e.message);
+  }
 }
 
 // ===== CONTRATO =====
