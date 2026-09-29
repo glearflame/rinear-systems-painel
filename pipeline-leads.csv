@@ -23,9 +23,9 @@ data,nome,nicho,cidade,canal,contato,status,valor_proposto,ultimo_contato,proxim
 2026-09-27,Donna | salão de beleza,salão de beleza,"Uberlândia, MG",telefone,(34) 3224-2322,novo,,,mandar WhatsApp,Lead Google Places. Site: nenhum
 2026-09-27,Elahvie Beauty & SPA,salão de beleza,"Uberlândia, MG",telefone,(34) 98832-9281,enviado,,2026-09-27,mandar WhatsApp,Lead Google Places. Site: https://www.instagram.com/elahviebeautyspa/
 2026-09-27,Salão de Beleza Kadu Vieira Hair Studio,salão de beleza,"Uberlândia, MG",telefone,(34) 3224-6272,enviado,,2026-09-27,mandar WhatsApp,Lead Google Places. Site: https://www.facebook.com/kaduvieirahairstudio?ref=hl
-2026-09-27,Espaço Ozzy,salão de beleza,"Uberlândia, MG",telefone,(34) 99141-0101,novo,,,mandar WhatsApp,Lead Google Places. Site: nenhum
-2026-09-27,Salão Stúdio 65,salão de beleza,"Uberlândia, MG",telefone,(34) 99199-1188,novo,,,mandar WhatsApp,Lead Google Places. Site: https://www.instagram.com/salaostudio65/
-2026-09-27,Liv Beauty - Salão de Beleza,salão de beleza,"Uberlândia, MG",telefone,(34) 99680-1710,novo,,,mandar WhatsApp,Lead Google Places. Site: nenhum
+2026-09-27,Espaço Ozzy,salão de beleza,"Uberlândia, MG",telefone,(34) 99141-0101,enviado,,2026-09-29,mandar WhatsApp,Lead Google Places. Site: nenhum
+2026-09-27,Salão Stúdio 65,salão de beleza,"Uberlândia, MG",telefone,(34) 99199-1188,enviado,,2026-09-29,mandar WhatsApp,Lead Google Places. Site: https://www.instagram.com/salaostudio65/
+2026-09-27,Liv Beauty - Salão de Beleza,salão de beleza,"Uberlândia, MG",telefone,(34) 99680-1710,enviado,,2026-09-29,mandar WhatsApp,Lead Google Places. Site: nenhum
 2026-09-27,ESPAÇO HAIR 307,salão de beleza,"Uberlândia, MG",telefone,(34) 3237-5911,novo,,,mandar WhatsApp,Lead Google Places. Site: https://www.facebook.com/espacoboletti.cabeleireiros?fref=ts
 2026-09-27,VAN.YOU / Uberlândia - Salão de Beleza,salão de beleza,"Uberlândia, MG",telefone,(34) 99666-5917,novo,,,mandar WhatsApp,Lead Google Places. Site: nenhum
 2026-09-27,Dra. Fabiane Peres - Harmonização Facial em Uberlândia,clínica de estética,"Uberlândia, MG",telefone,(34) 99165-1095,novo,,,mandar WhatsApp,Lead Google Places. Site: nenhum
@@ -33,3 +33,37 @@ data,nome,nicho,cidade,canal,contato,status,valor_proposto,ultimo_contato,proxim
 2026-09-27,GM Clinic Dra. Gláucia Milhomem,clínica de estética,"Uberlândia, MG",telefone,(34) 98431-1515,novo,,,mandar WhatsApp,Lead Google Places. Site: https://www.instagram.com/draglauciamilhomem?igsh=enoycnpseGhxMzdq
 2026-09-27,"Dra. Francielle Silveira- Harmonização facial, preenchimento com ácido hialurônico, botox e estética em Uberlândia",clínica de estética,"Uberlândia, MG",telefone,(32) 98494-1628,novo,,,mandar WhatsApp,Lead Google Places. Site: nenhum
 2026-09-28,Wissam Barber,barbearia,"Uberlândia, MG",telefone,(34) 3231-9000,novo,,,mandar WhatsApp,Site ruim: https://www.instagram.com/wissambarber.udi/
+2026-09-28,R&T Odontologia | Dentista em Uberlândia,dentista,"Uberlândia, MG",telefone,(34) 99978-9008,novo,,,mandar WhatsApp,Lead Google Places. Site: https://wa.me/5534999789008
+2026-09-28,Livia Giuliani | Estética Avançada em Uberlândia - MG,clínica de estética,"Uberlândia, MG",telefone,(34) 99659-6231,novo,,,mandar WhatsApp,Lead Google Places. Site: https://www.instagram.com/byliviagiuliani
+2026-09-28,RE.COM.POR - ESTÉTICA E BEM-ESTAR,clínica de estética,"Uberlândia, MG",telefone,(34) 99777-1101,novo,,,mandar WhatsApp,Lead Google Places. Site: https://www.instagram.com/recompor.estetica/
+2026-09-28,Studio Fabiane Teixeira,salão de beleza,"Uberlândia, MG",telefone,(34) 3214-9595,novo,,,mandar WhatsApp,Lead Google Places. Site: nenhum
+2026-09-28,Fast Escova Uberlândia Centro - Salão de beleza sem hora marcada,salão de beleza,"Uberlândia, MG",telefone,(34) 99875-7000,novo,,,mandar WhatsApp,Lead Google Places. Site: https://wa.me/5534998757000?text=Oi!%20Encontrei%20a%20Fast%20Escova%20Uberlandia%20no%20Google%20e%20quero%20saber%20mais%20informa%C3%A7%C3%B5es%20sobre%20os%20servi%C3%A7os!!
+2026-09-28,Santa Beauty – Salão de Beleza em Uberlândia,salão de beleza,"Uberlândia, MG",telefone,(34) 99862-0313,novo,,,mandar WhatsApp,Lead Google Places. Site: nenhum
+2026-09-28,Espaço Elenise Santos I Salão de beleza,salão de beleza,"Uberlândia, MG",telefone,(34) 99113-4220,novo,,,mandar WhatsApp,Lead Google Places. Site: nenhum
+2026-09-28,Camila Andrade - Estética Facial Avançada,clínica de estética,"Uberlândia, MG",telefone,(34) 99103-2832,novo,,,mandar WhatsApp,Lead Google Places. Site: nenhum
+2026-09-28,Clínica de Estética Liliane Guimarães,clínica de estética,"Uberlândia, MG",telefone,(34) 99801-7853,novo,,,mandar WhatsApp,Lead Google Places. Site: https://www.instagram.com/esteticalilianeguimaraes?igsh=dW1rcjBjb29uNTMz
+2026-09-28,Consultório Odontológico Constelação 24H,dentista,Uberlândia,telefone,(34) 98433-2490,novo,997,,mandar WhatsApp,Lead do Google Places. Site: nenhum
+2026-09-28,Dra. Millena Viriato | Cirurgiã-Dentista - Uberlândia-MG,dentista,Uberlândia,telefone,(34) 99205-7449,novo,997,,mandar WhatsApp,Lead do Google Places. Site: nenhum
+2026-09-28,Vieira Diniz Odontologia,dentista,Uberlândia,telefone,(34) 99802-1914,novo,,,mandar WhatsApp,Site ruim: https://instagram.com/lorenavieirar?igshid=MjEwN2IyYWYwYw==
+2026-09-28,Primer Odontocenter,dentista,Uberlândia,telefone,(34) 99778-7506,novo,,,mandar WhatsApp,Site ruim: https://wa.me/5534997787506
+2026-09-28,R&T Odontologia | Dentista em Uberlândia,dentista,Uberlândia,telefone,(34) 99978-9008,novo,,,mandar WhatsApp,Site ruim: https://wa.me/5534999789008
+2026-09-28,Clínica Gathi Odontologia,dentista,Uberlândia,telefone,(34) 99888-6666,novo,,,mandar WhatsApp,Site ruim: https://www.facebook.com/gathiodonto
+2026-09-28,Dra Vanessa Melo - Estética Uberlândia,clínica de estética,Uberlândia,telefone,(34) 99877-3639,novo,997,,mandar WhatsApp,Lead do Google Places. Site: nenhum
+2026-09-28,Clínica de Estética Face e Corpo Harmonização Facial e Botox,clínica de estética,Uberlândia,telefone,(34) 99881-3815,novo,997,,mandar WhatsApp,Lead do Google Places. Site: nenhum
+2026-09-28,"CLÍNICA DE ESTÉTICA FLORESÇA | Facial, Corporal, Depilação a LED, Emagrecimento e Harmonização de Glúteos | Uberlândia",clínica de estética,Uberlândia,,,novo,,,mandar DM no Instagram,Site ruim: https://linktr.ee/florescaestetica
+2026-09-28,Clínica de Estética Uberlândia - Laura Estética,clínica de estética,Uberlândia,telefone,(34) 99151-3985,novo,,,mandar WhatsApp,Site ruim: https://linktreelaura-wine.vercel.app/
+2026-09-28,Livia Giuliani | Estética Avançada,clínica de estética,Uberlândia,telefone,(34) 99659-6231,novo,,,mandar WhatsApp,Site ruim: https://www.instagram.com/byliviagiuliani
+2026-09-28,RE.COM.POR - ESTÉTICA E BEM-ESTAR,clínica de estética,Uberlândia,telefone,(34) 99777-1101,novo,,,mandar WhatsApp,Site ruim: https://www.instagram.com/recompor.estetica/
+2026-09-28,Lucas Barbearia,barbearia,Uberlândia,telefone,(34) 99188-3545,novo,997,,mandar WhatsApp,Lead do Google Places. Site: nenhum
+2026-09-28,Brooklyn Barber Club,barbearia,Uberlândia,telefone,(34) 98443-3904,novo,,,mandar WhatsApp,Site ruim: https://linktr.ee/brooklynbarberclubb
+2026-09-28,Barbearia Lâmina De Ouro,barbearia,Uberlândia,telefone,(34) 3238-7525,novo,,,mandar WhatsApp,Site ruim: https://instagram.com/barbearialaminadeouro?igshid=ymlpnv5g9efb
+2026-09-29,Personal Trainer Uberlândia Ueberton,personal trainer,"Uberlândia, MG",telefone,(34) 98899-2020,novo,997,,mandar WhatsApp,Lead do Google Places. Site: nenhum
+2026-09-29,Luis Fernando Personal Trainer,personal trainer,"Uberlândia, MG",telefone,(34) 99231-8732,novo,997,,mandar WhatsApp,Lead do Google Places. Site: nenhum
+2026-09-29,Estúdio Bruna Maia Personal Trainer,personal trainer,"Uberlândia, MG",telefone,(34) 98876-4338,novo,997,,mandar WhatsApp,Lead do Google Places. Site: nenhum
+2026-09-29,Studio Marcos Leodoro - Treinamento Personalizado,personal trainer,"Uberlândia, MG",telefone,(34) 99118-2396,novo,997,,mandar WhatsApp,Lead do Google Places. Site: nenhum
+2026-09-29,Studio LA FITNESS por Lara Fernanda,personal trainer,"Uberlândia, MG",telefone,(34) 99717-4085,novo,997,,mandar WhatsApp,Lead do Google Places. Site: nenhum
+2026-09-29,Linea Lu Personal,personal trainer,"Uberlândia, MG",telefone,(34) 99252-3900,novo,997,,mandar WhatsApp,Lead do Google Places. Site: nenhum
+2026-09-29,Tállita Cris Personal Uberlândia,personal trainer,"Uberlândia, MG",telefone,(34) 99935-1309,novo,,,mandar WhatsApp,Site ruim: https://www.instagram.com/tallitacris/
+2026-09-29,Personal trainer Strack coach,personal trainer,"Uberlândia, MG",telefone,(34) 99191-2525,novo,,,mandar WhatsApp,Site ruim: https://wa.me/5534991912525
+2026-09-29,Xandão Personal Trainer E Nutricionista Esportivo,personal trainer,"Uberlândia, MG",telefone,(34) 99209-0000,novo,,,mandar WhatsApp,Site ruim: https://wa.me/message/IRRJREFSGIR7J1
+2026-09-29,Estúdio Casa Lepri,personal trainer,"Uberlândia, MG",telefone,(34) 99190-9325,novo,,,mandar WhatsApp,Site ruim: https://www.instagram.com/casalepri/
