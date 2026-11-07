@@ -1,20 +1,20 @@
 // ============================================
 // PEDIDOS + GERADOR DE CARDÁPIO PÚBLICO
-// Prioridade 3 e 4
 // ============================================
 
 let qriousLoaded = false;
 
-async function renderPedidos(){
+async function renderPedidos() {
   await carregarEstadoSupabase();
   const rid = state.restauranteAtivo;
-  const rest = state.restaurantes.find(r=>r.id===rid);
+  const rest = state.restaurantes.find(r => String(r.id) === String(rid));
+
   const html = `
   <div class="page active" id="page-pedidos">
     <div class="page-head">
       <div>
         <h1>Pedidos</h1>
-        <p>${rest?rest.nome:'Selecione um restaurante'} — fluxo de status dos pedidos.</p>
+        <p>${rest ? rest.nome : 'Selecione um restaurante'} — fluxo de status dos pedidos.</p>
       </div>
     </div>
     ${rid ? `
@@ -39,12 +39,14 @@ async function renderPedidos(){
         </div>
       </div>
     </div>` : `
-    <div class="card empty-state"><h3>Selecione um restaurante</h3><p>Escolha um restaurante na barra lateral ou no Cardápio para ver os pedidos.</p></div>
-    `}
+    <div class="card empty-state">
+      <h3>Selecione um restaurante</h3>
+      <p>Escolha um restaurante no Cardápio (ou defina o ativo) para ver os pedidos e gerar o QR.</p>
+    </div>`}
   </div>`;
+
   document.getElementById('main').innerHTML = html;
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-pedidos').classList.add('active');
+
   if (rid) {
     const link = 'https://rinear-systems-site.glear-games-mk.workers.dev/cardapio.html?id=' + rid;
     const linkInput = document.getElementById('linkPublico');
@@ -64,82 +66,117 @@ async function loadQRious() {
   });
 }
 
-async function renderQR(rid){
+async function renderQR(rid) {
   const el = document.getElementById('qrcode');
   if (!el) return;
-  el.innerHTML = '<div style="color:var(--muted);font-size:12px">Carregando QR Code...</div>';
+  el.innerHTML = '<div style="color:#666;font-size:12px">Carregando QR Code...</div>';
   const loaded = await loadQRious();
   if (loaded && window.QRious) {
     try {
+      el.innerHTML = '';
+      const canvas = document.createElement('canvas');
+      el.appendChild(canvas);
       new QRious({
-        element: el,
-        value: 'https://rinear-systems-site.glear-games-mk.workers.dev/cardapio.html?id='+rid,
+        element: canvas,
+        value: 'https://rinear-systems-site.glear-games-mk.workers.dev/cardapio.html?id=' + rid,
         size: 180,
         background: '#ffffff',
         foreground: '#071d22'
       });
     } catch (e) {
-      el.innerHTML = '<div style="color:var(--muted);font-size:12px">Erro ao gerar QR Code</div>';
+      el.innerHTML = '<div style="color:#666;font-size:12px">Erro ao gerar QR Code</div>';
       console.error(e);
     }
   } else {
-    el.innerHTML = '<div style="color:var(--muted);font-size:12px">QR Code indisponível (biblioteca não carregou)</div>';
+    el.innerHTML = '<div style="color:#666;font-size:12px">QR Code indisponível</div>';
   }
 }
 
-function copiarLink(){
+function copiarLink() {
   const inp = document.getElementById('linkPublico');
   if (!inp) return;
-  inp.select(); 
-  document.execCommand('copy'); 
-  toast('Link copiado.');
+  inp.select();
+  try {
+    document.execCommand('copy');
+    toast('Link copiado.');
+  } catch {
+    navigator.clipboard?.writeText(inp.value).then(() => toast('Link copiado.'));
+  }
 }
-function abrirCardapioPublico(){
-  const rid = state.restauranteAtivo;
-  window.open('https://rinear-systems-site.glear-games-mk.workers.dev/cardapio.html?id='+rid,'_blank');
-}
-function imprimirQR(){ window.print(); toast('Imprima o QR Code para colar no balcão/mesa.'); }
 
-function renderListaPedidos(){
+function abrirCardapioPublico() {
+  const rid = state.restauranteAtivo;
+  if (!rid) return;
+  window.open('https://rinear-systems-site.glear-games-mk.workers.dev/cardapio.html?id=' + rid, '_blank');
+}
+
+function imprimirQR() {
+  window.print();
+  toast('Imprima o QR Code para colar no balcão/mesa.');
+}
+
+function renderListaPedidos() {
   const rid = state.restauranteAtivo;
   if (!rid) return '<div class="empty-state" style="padding:16px">Selecione um restaurante primeiro.</div>';
-  const peds = state.pedidos.filter(p=>p.restauranteId===rid).slice(-10).reverse();
-  if(!peds.length) return '<div class="empty-state" style="padding:16px">Nenhum pedido ainda.</div>';
-  return peds.map(p=>`
+  const peds = state.pedidos
+    .filter(p => String(p.restauranteId) === String(rid))
+    .slice(0, 15);
+  if (!peds.length) return '<div class="empty-state" style="padding:16px">Nenhum pedido ainda.</div>';
+  return peds.map(p => {
+    const dataStr = p.data || p.created_at;
+    const dataFmt = dataStr ? new Date(dataStr).toLocaleString('pt-BR') : '-';
+    return `
     <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);flex-wrap:wrap;gap:8px">
       <div>
-        <strong>#${p.id}</strong> — ${p.cliente||'Cliente'}
-        <div style="font-size:12px;color:var(--muted)">${new Date(p.data).toLocaleString('pt-BR')} • R$ ${parseFloat(p.total||0).toFixed(2)}</div>
+        <strong>#${String(p.id).slice(0, 8)}</strong> — ${p.cliente || 'Cliente'}
+        <div style="font-size:12px;color:var(--muted)">${dataFmt} • R$ ${parseFloat(p.total || 0).toFixed(2)}</div>
       </div>
-      <select onchange="mudarStatusPedido('${p.id}',this.value)" style="padding:6px 10px;background:var(--bg-sec);border:1px solid var(--border);color:var(--ink);border-radius:6px;font-size:12px">
-        <option value="recebido" ${p.status==='recebido'?'selected':''}>Recebido</option>
-        <option value="em preparo" ${p.status==='em preparo'?'selected':''}>Em preparo</option>
-        <option value="saiu entrega" ${p.status==='saiu entrega'?'selected':''}>Saiu para entrega</option>
-        <option value="pronto retirada" ${p.status==='pronto retirada'?'selected':''}>Pronto para retirada</option>
-        <option value="concluido" ${p.status==='concluido'?'selected':''}>Concluído</option>
-        <option value="cancelado" ${p.status==='cancelado'?'selected':''}>Cancelado</option>
+      <select onchange="mudarStatusPedido('${p.id}', this.value)" style="padding:6px 10px;background:var(--bg-sec);border:1px solid var(--border);color:var(--ink);border-radius:6px;font-size:12px">
+        <option value="recebido" ${p.status === 'recebido' ? 'selected' : ''}>Recebido</option>
+        <option value="em preparo" ${p.status === 'em preparo' ? 'selected' : ''}>Em preparo</option>
+        <option value="saiu entrega" ${p.status === 'saiu entrega' ? 'selected' : ''}>Saiu para entrega</option>
+        <option value="pronto retirada" ${p.status === 'pronto retirada' ? 'selected' : ''}>Pronto para retirada</option>
+        <option value="concluido" ${p.status === 'concluido' ? 'selected' : ''}>Concluído</option>
+        <option value="cancelado" ${p.status === 'cancelado' ? 'selected' : ''}>Cancelado</option>
       </select>
-    </div>`).join('');
-}
-async function mudarStatusPedido(id,novo){
-  try {
-    await window.dbUpdate('pedidos', id, { status: novo });
-    await carregarEstadoSupabase();
-    toast('Pedido #' + id + ' → ' + novo);
-    renderPedidos();
-  } catch(e){ toast('Erro ao atualizar pedido.'); console.error(e); }
+    </div>`;
+  }).join('');
 }
 
-// ---------- Novo pedido a partir do cardápio público ----------
-window.novoPedidoPublico = async function(rid, itens, total, cliente, forma, endereco, obs){
+async function mudarStatusPedido(id, novo) {
+  try {
+    await window.dbUpdate('pedidos', id, { status: novo });
+    await carregarEstadoSupabase(true);
+    toast('Pedido atualizado → ' + novo);
+    renderPedidos();
+  } catch (e) {
+    toast('Erro ao atualizar pedido.');
+    console.error(e);
+  }
+}
+
+window.novoPedidoPublico = async function (rid, itens, total, cliente, forma, endereco, obs) {
   try {
     await window.dbInsert('pedidos', {
-      restaurante_id: rid, cliente, forma, endereco, observacoes: obs,
-      itens, total, status: 'recebido'
+      restaurante_id: rid,
+      cliente,
+      forma,
+      endereco,
+      observacoes: obs,
+      itens,
+      total,
+      status: 'recebido'
     });
-    await carregarEstadoSupabase();
+    await carregarEstadoSupabase(true);
     toast('Pedido recebido!');
-  } catch(e){ toast('Erro ao registrar pedido.'); console.error(e); }
+  } catch (e) {
+    toast('Erro ao registrar pedido.');
+    console.error(e);
+  }
 };
 
 window.renderPedidos = renderPedidos;
+window.mudarStatusPedido = mudarStatusPedido;
+window.copiarLink = copiarLink;
+window.abrirCardapioPublico = abrirCardapioPublico;
+window.imprimirQR = imprimirQR;

@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Painel | Rinear Systems</title>
 <meta name="description" content="Painel de gestão de clientes e cardápios digitais - Rinear Systems">
-<!-- Fontes: usando system fonts para evitar bloqueio por worker/proxy -->
-<!-- Inter e DM Serif Display são carregadas via @font-face local se necessário, ou fallback nativo -->
 <style>
   @font-face { font-family: 'Inter'; src: local('Inter'), local('Inter-Regular'); font-weight: 400; font-display: swap; }
   @font-face { font-family: 'Inter'; src: local('Inter-Medium'), local('Inter Medium'); font-weight: 500; font-display: swap; }
@@ -14,7 +12,6 @@
   @font-face { font-family: 'Inter'; src: local('Inter-Bold'), local('Inter Bold'); font-weight: 700; font-display: swap; }
   @font-face { font-family: 'DM Serif Display'; src: local('DM Serif Display'), local('DMSerifDisplay-Regular'); font-weight: 400; font-style: italic; font-display: swap; }
 </style>
-<!-- Supabase JS Client -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
@@ -30,7 +27,6 @@
   a{color:inherit;text-decoration:none}img{max-width:100%;display:block}
   .container{max-width:1400px;margin:0 auto;padding:0 20px;width:100%}
   .app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
-  /* SIDEBAR */
   aside{background:var(--bg-sec);border-right:1px solid var(--border);position:sticky;top:0;height:100vh;overflow-y:auto;z-index:10}
   aside .brand{padding:24px 20px;font-family:var(--font-display);font-size:22px;letter-spacing:-.03em;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
   aside .brand span{color:var(--accent);font-style:italic}
@@ -38,38 +34,34 @@
   aside nav a{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;color:var(--muted);font-size:13.5px;font-weight:500;margin-bottom:6px;transition:all .2s;border:1px solid transparent}
   aside nav a:hover,aside nav a.active{background:rgba(255,255,255,.06);color:var(--ink);border-color:var(--border)}
   aside nav a.active{background:rgba(255,91,168,.15);color:var(--accent)}
-  /* TOPBAR */
   header{position:sticky;top:0;z-index:20;background:rgba(7,29,34,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
   header .container{display:flex;align-items:center;justify-content:space-between;height:56px}
   .user-badge{display:flex;align-items:center;gap:10px;background:var(--bg-sec);border:1px solid var(--border);padding:6px 14px;border-radius:999px;font-size:12.5px;color:var(--muted)}
   .user-badge .dot{width:8px;height:8px;background:var(--accent);border-radius:50%}
-  /* MAIN */
   main{padding:28px 32px;overflow-y:auto}
   .page{display:none}
   .page.active{display:block}
   .page-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:30px;flex-wrap:wrap;gap:16px}
   .page-head h1{font-family:var(--font-display);font-size:clamp(22px,4vw,32px);letter-spacing:-.02em}
   .page-head p{color:var(--muted);font-size:14px;max-width:420px}
-  /* STATS */
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-bottom:30px}
   .stat{background:var(--bg-sec);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
   .stat .v{font-size:28px;font-weight:700;margin-bottom:4px;font-variant-numeric:tabular-nums}
   .stat .l{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
   .stat .delta{font-size:12px;margin-top:6px;color:var(--accent);font-weight:600}
-  /* CARDS/TABLES */
   .card{background:var(--bg-sec);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:20px}
   .card h3{font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
   table{width:100%;border-collapse:collapse;font-size:13px}
   th{text-align:left;color:var(--muted);font-weight:600;padding:12px 10px;border-bottom:1px solid var(--border);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
   td{padding:12px 10px;border-bottom:1px solid var(--border);color:var(--ink)}
   tr:hover td{background:rgba(255,255,255,.03)}
-  .badge{display:inline-block;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;text-transform:uppercase;letter-spacing:.05em}
-  .bg-lead{background:rgba(139,92,255,.15);color:var(--accent2)}
-  .bg-negociacao{background:rgba(230,200,102,.15);color:var(--gold)}
-  .bg-producao{background:rgba(255,91,168,.15);color:var(--accent)}
-  .bg-entregue{background:rgba(34,197,94,.15);color:#22c55e}
-  .bg-manutencao{background:rgba(59,130,246,.15);color:#3b82f6}
-  .bg-perdido{background:rgba(239,68,68,.15);color:#ef4444}
+  .badge{display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:600}
+  .bg-lead{background:rgba(139,92,255,.2);color:#c4b5fd}
+  .bg-negociacao{background:rgba(234,179,8,.2);color:#fde047}
+  .bg-producao{background:rgba(59,130,246,.2);color:#93c5fd}
+  .bg-entregue{background:rgba(34,197,94,.2);color:#86efac}
+  .bg-manutencao{background:rgba(249,115,22,.2);color:#fdba74}
+  .bg-perdido{background:rgba(239,68,68,.2);color:#fca5a5}
   .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;border:none;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
   .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
   .btn-primary:hover{filter:brightness(1.1)}
@@ -80,13 +72,15 @@
   .btn-sm{padding:6px 10px;font-size:12px}
   .btn-icon{background:none;border:none;color:var(--muted);cursor:pointer;padding:6px;font-size:14px}
   .btn-icon:hover{color:var(--ink)}
-  input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--ink);padding:10px 12px;border-radius:8px;font-size:13px;font-family:inherit}
-  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
-  label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:500;text-transform:uppercase;letter-spacing:.06em}
   .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
-  .grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
   .field{margin-bottom:16px}
   .field.full{grid-column:1/-1}
+  .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:6px;font-weight:500}
+  .field input,.field select,.field textarea{
+    width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--border);
+    color:var(--ink);border-radius:8px;font-size:13px;font-family:inherit
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent)}
   .empty-state{text-align:center;padding:50px 20px;color:var(--muted)}
   .empty-state h3{color:var(--ink);margin-bottom:8px}
   .modal{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(0,0,0,.6)}
@@ -95,32 +89,26 @@
   .modal .close{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer}
   .modal h3{font-size:18px;margin-bottom:16px}
   .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
-  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bg-sec);border:1px solid var(--border);color:var(--ink);padding:12px 20px;border-radius:8px;z-index:200;box-shadow:var(--shadow);display:none;align-items:center;gap:10px;font-size:13px}
-  .toast.show{display:flex}
-  /* toggle helpers */
   .row-actions{display:flex;gap:6px}
-  /* scrollbar */
-  ::-webkit-scrollbar{width:8px;height:8px}
-  ::-webkit-scrollbar-track{background:transparent}
-  ::-webkit-scrollbar-thumb{background:#1f3a40;border-radius:4px}
-  /* mobile */
-  @media (max-width:900px){
+  .toast{position:fixed;bottom:24px;right:24px;background:var(--bg-sec);border:1px solid var(--border);padding:12px 20px;border-radius:10px;font-size:13px;box-shadow:var(--shadow);transform:translateY(100px);opacity:0;transition:all .3s;z-index:200}
+  .toast.show{transform:translateY(0);opacity:1}
+  .menu-btn{display:none;background:none;border:none;color:var(--ink);font-size:22px;cursor:pointer}
+  .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:5}
+  .overlay.open{display:block}
+  @media(max-width:900px){
     .app{grid-template-columns:1fr}
-    aside{position:fixed;left:0;top:0;bottom:0;width:250px;transform:translateX(-100%);transition:transform .3s;z-index:30}
+    aside{position:fixed;left:0;top:0;transform:translateX(-100%);transition:transform .25s;width:280px}
     aside.open{transform:translateX(0)}
-    .menu-btn{display:block;background:none;border:none;color:var(--ink);font-size:22px;cursor:pointer}
-    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:25;display:none}
-    .overlay.open{display:block}
+    .menu-btn{display:block}
+    main{padding:20px 16px}
   }
 </style>
 </head>
 <body>
-
-<div class="menu-btn" id="menuBtn" aria-label="Abrir menu">☰</div>
 <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
-
+<div class="app">
 <aside id="sidebar">
-  <div class="brand">R<span>*</span>S</div>
+  <div class="brand">Rinear <span>Systems</span></div>
   <nav>
     <a href="#" class="nav-link active" data-page="dashboard" onclick="navigate(event,'dashboard')"><span>📊</span>Dashboard</a>
     <a href="#" class="nav-link" data-page="restaurantes" onclick="navigate(event,'restaurantes')"><span>🍽️</span>Restaurantes</a>
@@ -130,24 +118,26 @@
     <a href="#" class="nav-link" data-page="midia" onclick="navigate(event,'midia')"><span>🖼️</span>Mídia</a>
     <a href="#" class="nav-link" data-page="relatorios" onclick="navigate(event,'relatorios')"><span>📈</span>Relatórios</a>
   </nav>
-  <div style="padding:20px">
+  <div style="padding:20px;border-top:1px solid var(--border);margin-top:auto">
     <a href="https://wa.me/5534991297581?text=Ol%C3%A1!%20Preciso%20de%20suporte%20com%20o%20painel%20da%20Rinear%20Systems." class="btn btn-primary" style="width:100%;justify-content:center" target="_blank">Suporte WhatsApp</a>
   </div>
 </aside>
 
+<div style="display:flex;flex-direction:column;min-height:100vh">
 <header>
   <div class="container">
-    <div style="display:flex;align-items:center;gap:12px"><span id="pageTitle">Dashboard</span></div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="menu-btn" id="menuBtn" aria-label="Abrir menu">☰</button>
+      <span id="pageTitle">Dashboard</span>
+    </div>
     <div class="user-badge"><span class="dot"></span>Administrador</div>
   </div>
 </header>
-
 <main id="main"></main>
+</div>
+</div>
 
-<!-- MODAL CONTAINER (missing in original - causes errors) -->
 <div class="modal" id="modal"></div>
-
-<!-- TOAST CONTAINER -->
 <div class="toast" id="toast"></div>
 
 <script src="supabase.js"></script>
@@ -168,117 +158,189 @@
     dbReady = true;
   }
 
-  /* ---- NAVEGAÇÃO ---- */
-  function navigate(evt, page){
-    if(evt) evt.preventDefault();
-    document.querySelectorAll('.nav-link').forEach(a=>a.classList.remove('active'));
-    const link = document.querySelector('.nav-link[data-page="'+page+'"]');
-    if(link) link.classList.add('active');
-    document.getElementById('pageTitle').textContent = {
-      dashboard:'Dashboard',restaurantes:'Restaurantes',cardapio:'Gestor de Cardápio',
-      pedidos:'Pedidos',mensagens:'Mensagens WhatsApp',midia:'Biblioteca de Mídia',relatorios:'Relatórios'
-    }[page]||page;
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    const pg = document.getElementById('page-'+page);
-    if(pg){ pg.classList.add('active'); }
-    else if(page==='cardapio'){ renderCardapio(); }
-    else if(page==='pedidos'){ renderPedidos(); }
-    else if(page==='mensagens'){ renderMensagens(); }
-    else if(page==='relatorios'){ renderRelatorios(); }
-    else if(page==='midia'){ renderMidia(); }
-    else{ renderPage(page); }
-    closeSidebar();
-  }
-  function closeSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
-  document.getElementById('menuBtn').onclick=()=>{ document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('open'); };
-
-  /* ---- ESTADO (Supabase + localStorage fallback) ---- */
-  const STORAGE_KEY='rinear_painel_v1';
-  let state = { 
-    restaurantes:[], 
-    leads:[], 
-    categorias:[], 
-    produtos:[], 
-    pedidos:[], 
-    mensagens:[],
-    midia:[],
+  /* ---- ESTADO ---- */
+  const STORAGE_KEY = 'rinear_painel_v1';
+  let state = {
+    restaurantes: [],
+    leads: [],
+    categorias: [],
+    produtos: [],
+    pedidos: [],
+    mensagens: [],
+    midia: [],
     restauranteAtivo: null
   };
-  let dbLoaded = false;
-  function save(){ localStorage.setItem(STORAGE_KEY,JSON.stringify(state)); }
-  function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2500); }
-  
-  async function carregarEstadoSupabase(){
-    if(dbLoaded) return state;
+
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+  }
+
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+  window.toast = toast;
+
+  /* Carrega SEMPRE do Supabase (ou fallback local). force=true força recarregar. */
+  async function carregarEstadoSupabase(force = true) {
     try {
       const sb = window.getSupabase();
       if (sb) {
-        // Carregar todas as tabelas em paralelo
         const [rest, cats, prods, peds, msgs, mid] = await Promise.all([
-          window.dbSelect('restaurantes', { order: { column: 'created_at', ascending: false } }),
-          window.dbSelect('categorias', { order: { column: 'ordem', ascending: true } }),
-          window.dbSelect('produtos', { order: { column: 'ordem', ascending: true } }),
-          window.dbSelect('pedidos', { order: { column: 'created_at', ascending: false } }),
-          window.dbSelect('mensagens', { order: { column: 'created_at', ascending: false } }),
-          window.dbSelect('midia', { order: { column: 'created_at', ascending: false } })
-        ]).catch(() => [null, null, null, null, null, null]);
-        
+          window.dbSelect('restaurantes', { order: { column: 'created_at', ascending: false } }).catch(() => null),
+          window.dbSelect('categorias', { order: { column: 'ordem', ascending: true } }).catch(() => null),
+          window.dbSelect('produtos', { order: { column: 'ordem', ascending: true } }).catch(() => null),
+          window.dbSelect('pedidos', { order: { column: 'created_at', ascending: false } }).catch(() => null),
+          window.dbSelect('mensagens', { order: { column: 'created_at', ascending: false } }).catch(() => null),
+          window.dbSelect('midia', { order: { column: 'created_at', ascending: false } }).catch(() => null)
+        ]);
+
         if (rest) {
-          state.restaurantes = rest.map(r=>({
-            id: r.id, nome: r.nome, tipo: r.tipo, responsavel: r.responsavel, whatsapp: r.whatsapp,
-            instagram: r.instagram, email: r.email, cidade: r.cidade, bairro: r.bairro,
-            googlemaps: r.googlemaps, sitio: r.sitio, observacoes: r.observacoes, status: r.status,
-            valor: r.valor, dataInicio: r.data_inicio, dataEntrega: r.data_entrega,
+          state.restaurantes = rest.map(r => ({
+            id: r.id,
+            nome: r.nome,
+            tipo: r.tipo,
+            responsavel: r.responsavel,
+            whatsapp: r.whatsapp,
+            instagram: r.instagram,
+            email: r.email,
+            cidade: r.cidade,
+            bairro: r.bairro,
+            googlemaps: r.googlemaps,
+            sitio: r.sitio,
+            observacoes: r.observacoes,
+            status: r.status,
+            valor: r.valor,
+            dataInicio: r.data_inicio,
+            dataEntrega: r.data_entrega,
             dataRenovacao: r.data_renovacao
           }));
         }
         if (cats) {
-          state.categorias = cats.map(c=>({...c, restauranteId: c.restaurante_id, categoriaId: c.id}));
+          state.categorias = cats.map(c => ({
+            ...c,
+            restauranteId: c.restaurante_id,
+            categoriaId: c.id
+          }));
         }
         if (prods) {
-          state.produtos = prods.map(p=>({...p, restauranteId: p.restaurante_id, categoriaId: p.categoria_id}));
+          state.produtos = prods.map(p => ({
+            ...p,
+            restauranteId: p.restaurante_id,
+            categoriaId: p.categoria_id
+          }));
         }
         if (peds) {
-          state.pedidos = peds.map(p=>({...p, restauranteId: p.restaurante_id}));
+          state.pedidos = peds.map(p => ({
+            ...p,
+            restauranteId: p.restaurante_id,
+            data: p.created_at || p.data
+          }));
         }
         if (msgs) {
-          state.mensagens = msgs.map(m=>({...m, restauranteId: m.restaurante_id}));
+          state.mensagens = msgs.map(m => ({
+            ...m,
+            restauranteId: m.restaurante_id
+          }));
         }
         if (mid) {
-          state.midia = mid.map(m=>({...m, restauranteId: m.restaurante_id}));
+          state.midia = mid.map(m => ({
+            ...m,
+            restauranteId: m.restaurante_id
+          }));
         }
-        dbLoaded = true;
+        // leads = restaurantes com status lead
+        state.leads = state.restaurantes.filter(r => r.status === 'lead');
+        save();
+        return state;
       }
-    } catch(e){ console.log('Supabase não disponível, usando localStorage'); }
-    if(!state.restaurantes.length){
-      const local = JSON.parse(localStorage.getItem(STORAGE_KEY));
-      if(local && local.restaurantes) state.restaurantes = local.restaurantes;
-      if(local && local.categorias) state.categorias = local.categorias;
-      if(local && local.produtos) state.produtos = local.produtos;
-      if(local && local.pedidos) state.pedidos = local.pedidos;
-      if(local && local.mensagens) state.mensagens = local.mensagens;
-      if(local && local.midia) state.midia = local.midia;
-      if(local && local.restauranteAtivo) state.restauranteAtivo = local.restauranteAtivo;
+    } catch (e) {
+      console.log('Supabase indisponível, usando localStorage', e);
     }
-    save();
+
+    // Fallback local
+    try {
+      const local = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+      if (local) {
+        if (local.restaurantes) state.restaurantes = local.restaurantes;
+        if (local.categorias) state.categorias = local.categorias;
+        if (local.produtos) state.produtos = local.produtos;
+        if (local.pedidos) state.pedidos = local.pedidos;
+        if (local.mensagens) state.mensagens = local.mensagens;
+        if (local.midia) state.midia = local.midia;
+        if (local.restauranteAtivo) state.restauranteAtivo = local.restauranteAtivo;
+        state.leads = state.restaurantes.filter(r => r.status === 'lead');
+      }
+    } catch (e) {}
     return state;
   }
+  window.carregarEstadoSupabase = carregarEstadoSupabase;
 
-  /* ---- RENDER DASHBOARD ---- */
-  async function renderDashboard(){
+  /* ---- NAVEGAÇÃO ---- */
+  function navigate(evt, page) {
+    if (evt) evt.preventDefault();
+    document.querySelectorAll('.nav-link').forEach(a => a.classList.remove('active'));
+    const link = document.querySelector('.nav-link[data-page="' + page + '"]');
+    if (link) link.classList.add('active');
+    document.getElementById('pageTitle').textContent = {
+      dashboard: 'Dashboard',
+      restaurantes: 'Restaurantes',
+      cardapio: 'Gestor de Cardápio',
+      pedidos: 'Pedidos',
+      mensagens: 'Mensagens WhatsApp',
+      midia: 'Biblioteca de Mídia',
+      relatorios: 'Relatórios'
+    }[page] || page;
+
+    if (page === 'dashboard') renderDashboard();
+    else if (page === 'restaurantes') renderRestaurantes();
+    else if (page === 'cardapio') renderCardapio();
+    else if (page === 'pedidos') renderPedidos();
+    else if (page === 'mensagens') renderMensagens();
+    else if (page === 'relatorios') renderRelatorios();
+    else if (page === 'midia') renderMidia();
+    closeSidebar();
+  }
+  window.navigate = navigate;
+
+  function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  }
+  document.getElementById('menuBtn').onclick = () => {
+    document.getElementById('sidebar').classList.add('open');
+    document.getElementById('overlay').classList.add('open');
+  };
+
+  function closeModal() {
+    const m = document.getElementById('modal');
+    m.classList.remove('open');
+    m.innerHTML = '';
+  }
+  window.closeModal = closeModal;
+
+  /* ---- DASHBOARD ---- */
+  async function renderDashboard() {
     await carregarEstadoSupabase();
     const rest = state.restaurantes;
     const total = rest.length;
-    const andamento = rest.filter(r=>r.status==='em producao' || r.status==='em negociacao').length;
-    const entregues = rest.filter(r=>r.status==='entregue').length;
+    const andamento = rest.filter(r => r.status === 'em producao' || r.status === 'em negociacao').length;
+    const entregues = rest.filter(r => r.status === 'entregue').length;
     const leads = state.leads.length;
-    const pendentes = rest.filter(r=>r.status==='lead' || r.status==='em negociacao').length;
-    const faturamento = rest.reduce((s,r)=>s+(parseFloat(r.valor)||0),0);
-    const proximas = rest.filter(r=>r.dataEntrega).sort((a,b)=>a.dataEntrega.localeCompare(b.dataEntrega)).slice(0,5);
-    const semResposta = rest.filter(r=>r.status==='lead').length;
+    const pendentes = rest.filter(r => r.status === 'lead' || r.status === 'em negociacao').length;
+    const faturamento = rest.reduce((s, r) => s + (parseFloat(r.valor) || 0), 0);
+    const proximas = rest.filter(r => r.dataEntrega).sort((a, b) => String(a.dataEntrega).localeCompare(String(b.dataEntrega))).slice(0, 5);
+
     const html = `
     <div class="page active" id="page-dashboard">
-      <div class="page-head"><h1>Dashboard</h1><p>Visão geral dos seus restaurantes, entregas e leads.</p></div>
+      <div class="page-head">
+        <div>
+          <h1>Dashboard</h1>
+          <p>Visão geral dos seus restaurantes, entregas e leads.</p>
+        </div>
+      </div>
       <div class="stats">
         <div class="stat"><div class="v">${total}</div><div class="l">Restaurantes cadastrados</div></div>
         <div class="stat"><div class="v">${andamento}</div><div class="l">Projetos em andamento</div></div>
@@ -290,111 +352,147 @@
       <div class="grid-2">
         <div class="card">
           <h3>Próximas entregas</h3>
-          ${proximas.length?`<table><thead><tr><th>Restaurante</th><th>Entrega prevista</th><th>Status</th></tr></thead><tbody>`+
-          proximas.map(r=>`<tr><td>${r.nome}</td><td>${r.dataEntrega}</td><td><span class="badge bg-${r.status.replace(' ','-')}">${r.status}</span></td></tr>`).join('')+`</tbody></table>`:`<div class="empty-state"><h3>Sem entregas previstas</h3><p>Cadastre um restaurante com data de entrega.</p></div>`}
+          ${proximas.length ? `<table><thead><tr><th>Restaurante</th><th>Entrega prevista</th><th>Status</th></tr></thead><tbody>
+            ${proximas.map(r => `<tr>
+              <td>${r.nome}</td>
+              <td>${r.dataEntrega || '-'}</td>
+              <td><span class="badge bg-${statusClass(r.status)}">${r.status || '-'}</span></td>
+            </tr>`).join('')}
+          </tbody></table>` : '<div class="empty-state" style="padding:24px">Nenhuma entrega prevista.</div>'}
         </div>
         <div class="card">
-          <h3>Clientes sem resposta</h3>
-          ${semResposta?`<table><thead><tr><th>Restaurante</th><th>WhatsApp</th><th>Ação</th></tr></thead><tbody>`+
-          rest.filter(r=>r.status==='lead').map(r=>`<tr><td>${r.nome}</td><td>${r.whatsapp}</td><td><a href="https://wa.me/${r.whatsapp}?text=Ol%C3%A1%20${encodeURIComponent(r.nome.split(' ')[0])}%2C%20tudo%20bem%3F%20Vim%20fazer%20um%20follow-up%20sobre%20o%20card%C3%A1pio%20digital." class="btn btn-sm btn-ghost" target="_blank">Contatar</a></td></tr>`).join('')+`</tbody></table>`:`<div class="empty-state"><h3>Todos em dia</h3><p>Não há restaurantes sem resposta no momento.</p></div>`}
+          <h3>Leads recentes</h3>
+          ${state.leads.length ? state.leads.slice(0, 6).map(r => `
+            <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
+              <div><strong>${r.nome}</strong><div style="font-size:12px;color:var(--muted)">${r.whatsapp || r.cidade || '-'}</div></div>
+              <a href="https://wa.me/${(r.whatsapp||'').replace(/\D/g,'')}?text=Ol%C3%A1" class="btn btn-sm btn-ghost" target="_blank">Contatar</a>
+            </div>`).join('') : '<div class="empty-state" style="padding:24px">Nenhum lead no momento.</div>'}
         </div>
       </div>
     </div>`;
     document.getElementById('main').innerHTML = html;
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.getElementById('page-dashboard').classList.add('active');
+  }
+  window.renderDashboard = renderDashboard;
+
+  function statusClass(s) {
+    if (!s) return 'lead';
+    if (s === 'em negociacao') return 'negociacao';
+    if (s === 'em producao') return 'producao';
+    if (s === 'entregue') return 'entregue';
+    if (s === 'manutencao') return 'manutencao';
+    if (s === 'perdido') return 'perdido';
+    return 'lead';
   }
 
-  /* ---- RENDER RESTAURANTES ---- */
-  async function renderRestaurantes(){
+  /* ---- RESTAURANTES ---- */
+  async function renderRestaurantes() {
     await carregarEstadoSupabase();
     const lista = state.restaurantes;
-    const statusLabel = {lead:'Lead',emnegociacao:'Em negociação',emproducao:'Em produção',entregue:'Entregue',manutencao:'Manutenção',perdido:'Perdido'};
     const html = `
     <div class="page active" id="page-restaurantes">
       <div class="page-head">
         <div>
           <h1>Restaurantes</h1>
-          <p>Cadastre e gerencie seus clientes restaurantes.</p>
+          <p>Cadastro e acompanhamento dos projetos de cardápio digital.</p>
         </div>
         <button class="btn btn-primary" onclick="openCadastro()">+ Novo restaurante</button>
       </div>
       <div class="card">
-        <table>
-          <thead><tr><th>Nome</th><th>Tipo</th><th>Responsável</th><th>WhatsApp</th><th>Cidade</th><th>Status</th><th>Valor</th><th>Ações</th></tr></thead>
+        ${lista.length ? `<table>
+          <thead><tr>
+            <th>Nome</th><th>Tipo</th><th>Responsável</th><th>Cidade</th><th>Status</th><th>Valor</th><th></th>
+          </tr></thead>
           <tbody>
-          ${lista.map(r=>`<tr>
-            <td><strong>${r.nome}</strong><br><small style="color:var(--muted)">@${r.instagram||'-'}</small></td>
-            <td>${r.tipo}</td>
-            <td>${r.responsavel||'-'}</td>
-            <td><a href="https://wa.me/${r.whatsapp}?text=Ol%C3%A1%20${encodeURIComponent(r.nome)}%2C%20tudo%20bem%3F" target="_blank" style="color:var(--accent)">${r.whatsapp||'-'}</a></td>
-            <td>${r.cidade||'-'}</td>
-            <td><span class="badge bg-${r.status.replace(' ','-')}">${statusLabel[r.status]||r.status}</span></td>
-            <td>R$ ${(parseFloat(r.valor)||0).toLocaleString('pt-BR',{minimumFractionDigits:2})}</td>
-            <td class="row-actions">
-              <button class="btn-icon" title="Editar" onclick="editRestaurante(${r.id})">✏️</button>
-              <button class="btn-icon" title="Excluir" onclick="excluirRestaurante(${r.id})" style="color:var(--muted)">🗑️</button>
-            </td>
-          </tr>`).join('')||`<tr><td colspan="8" class="empty-state" style="padding:24px">Nenhum restaurante cadastrado.</td></tr>`}
+            ${lista.map(r => `<tr>
+              <td><strong>${r.nome || '-'}</strong></td>
+              <td>${r.tipo || '-'}</td>
+              <td>${r.responsavel || '-'}</td>
+              <td>${r.cidade || '-'}</td>
+              <td><span class="badge bg-${statusClass(r.status)}">${r.status || '-'}</span></td>
+              <td>R$ ${(parseFloat(r.valor)||0).toLocaleString('pt-BR')}</td>
+              <td>
+                <div class="row-actions">
+                  <button class="btn-icon" title="Editar" onclick="editRestaurante('${r.id}')">✏️</button>
+                  <button class="btn-icon" title="Excluir" onclick="excluirRestaurante('${r.id}')" style="color:var(--muted)">🗑️</button>
+                </div>
+              </td>
+            </tr>`).join('')}
           </tbody>
-        </table>
+        </table>` : '<div class="empty-state"><h3>Nenhum restaurante</h3><p>Clique em “+ Novo restaurante” para começar.</p></div>'}
       </div>
     </div>`;
     document.getElementById('main').innerHTML = html;
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    document.getElementById('page-restaurantes').classList.add('active');
   }
+  window.renderRestaurantes = renderRestaurantes;
 
-  /* ---- CADASTRO MODAL ---- */
-  function openCadastro(r=null){
+  function openCadastro(r = null) {
     const isEdit = !!r;
-    document.getElementById('modal').innerHTML = `
-    <div class="modal open">
-      <div class="panel">
+    const html = `
+      <div class="panel" style="max-width:640px">
         <button class="close" onclick="closeModal()">✕</button>
-        <h3>${isEdit?'Editar restaurante':'Novo restaurante'}</h3>
+        <h3>${isEdit ? 'Editar restaurante' : 'Novo restaurante'}</h3>
         <form id="formCadastro">
+          <input type="hidden" name="id" value="${isEdit ? r.id : ''}">
           <div class="grid-2">
-            <div class="field"><label>Nome do restaurante <span style="color:#ef4444">*</span></label><input name="nome" value="${isEdit?r.nome:''}" required></div>
-            <div class="field"><label>Tipo</label><select name="tipo"><option value="hamburgueria">Hamburgueria</option><option value="pizzaria">Pizzaria</option><option value="marmitaria">Marmitaria</option><option value="self-service">Self-service</option><option value="acaí">Açaí</option><option value="food-truck">Food truck</option><option value="lanchonete">Lanchonete</option><option value="outro">Outro</option></select></div>
-            <div class="field full"><label>Nome do responsável</label><input name="responsavel" value="${isEdit?r.responsavel:''}"></div>
-            <div class="field"><label>WhatsApp</label><input name="whatsapp" value="${isEdit?r.whatsapp:''}" placeholder="553499999999"></div>
-            <div class="field"><label>Instagram</label><input name="instagram" value="${isEdit?r.instagram:''}"></div>
-            <div class="field"><label>E-mail</label><input type="email" name="email" value="${isEdit?r.email:''}"></div>
+            <div class="field"><label>Nome do restaurante <span style="color:#ef4444">*</span></label><input name="nome" value="${isEdit ? (r.nome||'') : ''}" required></div>
+            <div class="field"><label>Tipo</label>
+              <select name="tipo">
+                <option value="hamburgueria">Hamburgueria</option>
+                <option value="pizzaria">Pizzaria</option>
+                <option value="marmitaria">Marmitaria</option>
+                <option value="self-service">Self-service</option>
+                <option value="acaí">Açaí</option>
+                <option value="food-truck">Food truck</option>
+                <option value="lanchonete">Lanchonete</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
+            <div class="field full"><label>Nome do responsável</label><input name="responsavel" value="${isEdit ? (r.responsavel||'') : ''}"></div>
+            <div class="field"><label>WhatsApp</label><input name="whatsapp" value="${isEdit ? (r.whatsapp||'') : ''}" placeholder="553499999999"></div>
+            <div class="field"><label>Instagram</label><input name="instagram" value="${isEdit ? (r.instagram||'') : ''}"></div>
+            <div class="field"><label>E-mail</label><input type="email" name="email" value="${isEdit ? (r.email||'') : ''}"></div>
           </div>
           <div class="grid-2">
-            <div class="field"><label>Cidade</label><input name="cidade" value="${isEdit?r.cidade:''}"></div>
-            <div class="field"><label>Bairro</label><input name="bairro" value="${isEdit?r.bairro:''}"></div>
-            <div class="field"><label>Link Google Maps</label><input name="googlemaps" value="${isEdit?r.googlemaps:''}"></div>
-            <div class="field"><label>Link site atual</label><input name="sitio" value="${isEdit?r.sitio:''}"></div>
+            <div class="field"><label>Cidade</label><input name="cidade" value="${isEdit ? (r.cidade||'') : ''}"></div>
+            <div class="field"><label>Bairro</label><input name="bairro" value="${isEdit ? (r.bairro||'') : ''}"></div>
+            <div class="field"><label>Link Google Maps</label><input name="googlemaps" value="${isEdit ? (r.googlemaps||'') : ''}"></div>
+            <div class="field"><label>Link site atual</label><input name="sitio" value="${isEdit ? (r.sitio||'') : ''}"></div>
           </div>
-          <div class="field full"><label>Observações</label><textarea name="observacoes" rows="2">${isEdit?r.observacoes:''}</textarea></div>
+          <div class="field full"><label>Observações</label><textarea name="observacoes" rows="2">${isEdit ? (r.observacoes||'') : ''}</textarea></div>
           <div class="grid-2">
-            <div class="field"><label>Status</label><select name="status">
-              <option value="lead">Lead</option>
-              <option value="em negociacao">Em negociação</option>
-              <option value="em producao">Em produção</option>
-              <option value="entregue">Entregue</option>
-              <option value="manutencao">Manutenção</option>
-              <option value="perdido">Perdido</option>
-            </select></div>
-            <div class="field"><label>Valor do projeto (R$)</label><input type="number" name="valor" step="0.01" value="${isEdit?r.valor:''}"></div>
+            <div class="field"><label>Status</label>
+              <select name="status">
+                <option value="lead">Lead</option>
+                <option value="em negociacao">Em negociação</option>
+                <option value="em producao">Em produção</option>
+                <option value="entregue">Entregue</option>
+                <option value="manutencao">Manutenção</option>
+                <option value="perdido">Perdido</option>
+              </select>
+            </div>
+            <div class="field"><label>Valor do projeto (R$)</label><input type="number" name="valor" step="0.01" value="${isEdit ? (r.valor||'') : ''}"></div>
           </div>
           <div class="grid-2">
-            <div class="field"><label>Data de início</label><input type="date" name="dataInicio" value="${isEdit?r.dataInicio:''}"></div>
-            <div class="field"><label>Data prevista de entrega</label><input type="date" name="dataEntrega" value="${isEdit?r.dataEntrega:''}"></div>
-            <div class="field"><label>Data de renovação mensal</label><input type="date" name="dataRenovacao" value="${isEdit?r.dataRenovacao:''}"></div>
+            <div class="field"><label>Data de início</label><input type="date" name="dataInicio" value="${isEdit ? (r.dataInicio||'') : ''}"></div>
+            <div class="field"><label>Data prevista de entrega</label><input type="date" name="dataEntrega" value="${isEdit ? (r.dataEntrega||'') : ''}"></div>
+            <div class="field"><label>Data de renovação</label><input type="date" name="dataRenovacao" value="${isEdit ? (r.dataRenovacao||'') : ''}"></div>
           </div>
           <div class="actions">
             <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
-            <button type="submit" class="btn btn-primary">${isEdit?'Salvar alterações':'Cadastrar'}</button>
+            <button type="submit" class="btn btn-primary">${isEdit ? 'Salvar alterações' : 'Cadastrar'}</button>
           </div>
-          <input type="hidden" name="id" value="${isEdit?r.id:''}">
         </form>
-      </div>
-    </div>`;
-    document.getElementById('modal').classList.add('open');
-    document.getElementById('formCadastro').onsubmit = async (e)=>{
+      </div>`;
+    const modal = document.getElementById('modal');
+    modal.innerHTML = html;
+    modal.classList.add('open');
+
+    const form = document.getElementById('formCadastro');
+    if (isEdit) {
+      form.elements['tipo'].value = r.tipo || 'hamburgueria';
+      form.elements['status'].value = r.status || 'lead';
+    }
+    form.onsubmit = async (e) => {
       e.preventDefault();
       const fd = new FormData(e.target);
       const dados = Object.fromEntries(fd);
@@ -416,47 +514,47 @@
         data_entrega: dados.dataEntrega || null,
         data_renovacao: dados.dataRenovacao || null
       };
-      if(isEdit){
-        await window.dbUpdate('restaurantes', dados.id, registro);
-      } else {
-        await window.dbInsert('restaurantes', registro);
+      try {
+        if (isEdit && dados.id) {
+          await window.dbUpdate('restaurantes', dados.id, registro);
+        } else {
+          await window.dbInsert('restaurantes', registro);
+        }
+        await carregarEstadoSupabase(true);
+        closeModal();
+        renderRestaurantes();
+        toast(isEdit ? 'Restaurante atualizado.' : 'Restaurante cadastrado.');
+      } catch (err) {
+        console.error(err);
+        toast('Erro ao salvar. Verifique a conexão/Supabase.');
       }
-      await carregarEstadoSupabase();
-      closeModal(); renderRestaurantes(); toast(isEdit?'Restaurante atualizado.':'Restaurante cadastrado.');
     };
-    document.getElementById('formCadastro').elements['tipo'].value = isEdit?r.tipo:'hamburgueria';
-    document.getElementById('formCadastro').elements['status'].value = isEdit?r.status:'lead';
   }
-  async function editRestaurante(id){
-    await carregarEstadoSupabase();
-    const r = state.restaurantes.find(x=>x.id===id);
-    if(r) openCadastro(r);
-  }
-  async function excluirRestaurante(id){
-    if(!confirm('Tem certeza que deseja excluir este restaurante?')) return;
-    await window.dbDelete('restaurantes', id);
-    await carregarEstadoSupabase();
-    renderRestaurantes(); toast('Restaurante excluído.');
-  }
-  function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+  window.openCadastro = openCadastro;
 
-  /* ---- PAGES PLACEHOLDERS (a serem preenchidas nas próximas partes) ---- */
-  function renderPage(page){
-    const placeholders = {
-      cardapio:'<div class="page active" id="page-cardapio"><div class="page-head"><h1>Gestor de Cardápio</h1><p>Categorias, produtos e variações por restaurante.</p></div><div class="card empty-state"><h3>Em breve</h3><p>Gestor de cardápio será entregue na próxima etapa.</p></div></div>',
-      pedidos:'<div class="page active" id="page-pedidos"><div class="page-head"><h1>Pedidos</h1><p>Fluxo de status dos pedidos dos cardápios digitais.</p></div><div class="card empty-state"><h3>Em breve</h3><p>Tela de pedidos será entregue na próxima etapa.</p></div></div>',
-      mensagens:'<div class="page active" id="page-mensagens"><div class="page-head"><h1>Mensagens WhatsApp</h1><p>Modelos automáticos de mensagem.</p></div><div class="card empty-state"><h3>Em breve</h3><p>Biblioteca de mensagens será entregue na próxima etapa.</p></div></div>',
-      midia:'<div class="page active" id="page-midia"><div class="page-head"><h1>Biblioteca de Mídia</h1><p>Logos, fotos de pratos, banners e QR Codes.</p></div><div class="card empty-state"><h3>Em breve</h3><p>Biblioteca de mídia será entregue na próxima etapa.</p></div></div>',
-      relatorios:'<div class="page active" id="page-relatorios"><div class="page-head"><h1>Relatórios</h1><p>Indicadores simples de gestão.</p></div><div class="card empty-state"><h3>Em breve</h3><p>Relatórios serão entregues na próxima etapa.</p></div></div>'
-    };
-    document.getElementById('main').innerHTML = placeholders[page]||'<div class="page active"><h1>Página não encontrada</h1></div>';
-    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-    const np = document.getElementById('page-'+page); if(np) np.classList.add('active');
+  async function editRestaurante(id) {
+    await carregarEstadoSupabase();
+    const r = state.restaurantes.find(x => String(x.id) === String(id));
+    if (r) openCadastro(r);
   }
+  window.editRestaurante = editRestaurante;
 
-  /* ---- INICIALIZA ---- */
+  async function excluirRestaurante(id) {
+    if (!confirm('Tem certeza que deseja excluir este restaurante?')) return;
+    try {
+      await window.dbDelete('restaurantes', id);
+      await carregarEstadoSupabase(true);
+      renderRestaurantes();
+      toast('Restaurante excluído.');
+    } catch (err) {
+      console.error(err);
+      toast('Erro ao excluir.');
+    }
+  }
+  window.excluirRestaurante = excluirRestaurante;
+
+  /* ---- BOOT ---- */
   initDB().then(() => renderDashboard());
 </script>
-
 </body>
 </html>

@@ -1,16 +1,29 @@
 // ============================================
 // RELATÓRIOS SIMPLES
-// Prioridade 6
 // ============================================
 
-function renderRelatorios(){
+async function renderRelatorios() {
+  await carregarEstadoSupabase();
   const rest = state.restaurantes;
   const porStatus = {};
-  rest.forEach(r=>{ porStatus[r.status] = (porStatus[r.status]||0)+1; });
-  const entreguesMes = rest.filter(r=>r.status==='entregue' && r.dataEntrega && new Date(r.dataEntrega).getMonth()===new Date().getMonth()).length;
-  const manutencao = rest.filter(r=>r.status==='manutencao').length;
-  const valorPrevisto = rest.reduce((s,r)=>s+(parseFloat(r.valor)||0),0);
-  const valorRecebido = rest.filter(r=>r.status==='entregue').reduce((s,r)=>s+(parseFloat(r.valor)||0),0);
+  rest.forEach(r => {
+    const s = r.status || 'sem status';
+    porStatus[s] = (porStatus[s] || 0) + 1;
+  });
+
+  const mesAtual = new Date().getMonth();
+  const entreguesMes = rest.filter(r =>
+    r.status === 'entregue' &&
+    r.dataEntrega &&
+    new Date(r.dataEntrega).getMonth() === mesAtual
+  ).length;
+
+  const manutencao = rest.filter(r => r.status === 'manutencao').length;
+  const valorPrevisto = rest.reduce((s, r) => s + (parseFloat(r.valor) || 0), 0);
+  const valorRecebido = rest
+    .filter(r => r.status === 'entregue')
+    .reduce((s, r) => s + (parseFloat(r.valor) || 0), 0);
+
   const html = `
   <div class="page active" id="page-relatorios">
     <div class="page-head">
@@ -28,11 +41,11 @@ function renderRelatorios(){
       <div class="card">
         <h3>Restaurantes por status</h3>
         <div style="display:flex;flex-direction:column;gap:8px">
-          ${Object.entries(porStatus).map(([s,v])=>` 
+          ${Object.entries(porStatus).map(([s, v]) => `
           <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-            <span style="font-size:13px">${s.charAt(0).toUpperCase()+s.slice(1)}</span>
+            <span style="font-size:13px">${s.charAt(0).toUpperCase() + s.slice(1)}</span>
             <span style="font-weight:700;font-variant-numeric:tabular-nums">${v}</span>
-          </div>`).join('')||'<div class="empty-state" style="padding:12px">Sem dados.</div>'}
+          </div>`).join('') || '<div class="empty-state" style="padding:12px">Sem dados.</div>'}
         </div>
       </div>
       <div class="card">
@@ -40,24 +53,26 @@ function renderRelatorios(){
         <div style="display:flex;flex-direction:column;gap:10px">
           <div style="display:flex;justify-content:space-between"><span>Prevista</span><strong>R$ ${valorPrevisto.toLocaleString('pt-BR')}</strong></div>
           <div style="display:flex;justify-content:space-between"><span>Recebida (entregues)</span><strong style="color:#22c55e">R$ ${valorRecebido.toLocaleString('pt-BR')}</strong></div>
-          <div style="display:flex;justify-content:space-between"><span>Pendente</span><strong>R$ ${(valorPrevisto-valorRecebido).toLocaleString('pt-BR')}</strong></div>
+          <div style="display:flex;justify-content:space-between"><span>Pendente</span><strong>R$ ${(valorPrevisto - valorRecebido).toLocaleString('pt-BR')}</strong></div>
         </div>
       </div>
     </div>
     <div class="card">
       <h3>Follow-ups pendentes</h3>
       <div style="display:flex;flex-direction:column;gap:8px">
-        ${rest.filter(r=>r.status==='lead' || r.status==='em negociacao').map(r=>`
+        ${rest.filter(r => r.status === 'lead' || r.status === 'em negociacao').map(r => {
+          const wa = (r.whatsapp || '').replace(/\D/g, '');
+          return `
         <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-          <div><strong>${r.nome}</strong><div style="font-size:12px;color:var(--muted)">${r.whatsapp||'-'}</div></div>
-          <a href="https://wa.me/${r.whatsapp}?text=Ol%C3%A1%20${encodeURIComponent(r.nome.split(' ')[0])}%2C%20tudo%20bem%3F" class="btn btn-sm btn-ghost" target="_blank">Contatar</a>
-        </div>`).join('')||'<div class="empty-state" style="padding:12px">Nenhum follow-up pendente.</div>'}
+          <div><strong>${r.nome}</strong><div style="font-size:12px;color:var(--muted)">${r.whatsapp || '-'}</div></div>
+          <a href="https://wa.me/${wa}?text=Ol%C3%A1%20${encodeURIComponent((r.nome||'').split(' ')[0])}%2C%20tudo%20bem%3F" class="btn btn-sm btn-ghost" target="_blank">Contatar</a>
+        </div>`;
+        }).join('') || '<div class="empty-state" style="padding:12px">Nenhum follow-up pendente.</div>'}
       </div>
     </div>
   </div>`;
+
   document.getElementById('main').innerHTML = html;
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-relatorios').classList.add('active');
 }
 
 window.renderRelatorios = renderRelatorios;
