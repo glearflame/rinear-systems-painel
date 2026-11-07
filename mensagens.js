@@ -19,6 +19,24 @@ async function renderMensagens(){
   await carregarEstadoSupabase();
   const rid = state.restauranteAtivo;
   const rest = state.restaurantes.find(r=>r.id===rid);
+  
+  if (!rid) {
+    const html = `
+    <div class="page active" id="page-mensagens">
+      <div class="page-head">
+        <div>
+          <h1>Mensagens WhatsApp</h1>
+          <p>Selecione um restaurante — modelos editáveis de envio automático.</p>
+        </div>
+      </div>
+      <div class="card empty-state"><h3>Selecione um restaurante</h3><p>Escolha um restaurante na barra lateral ou no Cardápio para gerenciar modelos de mensagem.</p></div>
+    </div>`;
+    document.getElementById('main').innerHTML = html;
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById('page-mensagens').classList.add('active');
+    return;
+  }
+
   const msgs = state.mensagens.filter(m=>m.restauranteId===rid);
   const html = `
   <div class="page active" id="page-mensagens">
@@ -69,10 +87,10 @@ async function renderMensagens(){
 
 function renderListaModelos(){
   const rid = state.restauranteAtivo;
+  const el = document.getElementById('listaModelos');
+  if (!rid || !el) return;
   const msgs = state.mensagens.filter(m=>m.restauranteId===rid);
   const todos = [...MODELOS_PADRAO.map(m=>({...m,padrao:true})), ...msgs];
-  const el = document.getElementById('listaModelos');
-  if (!el) return;
   el.innerHTML = todos.map(m=>{
     const minha = msgs.find(x=>x.nome===m.nome);
     return `
@@ -87,6 +105,8 @@ function renderListaModelos(){
   }).join('');
 }
 function clonarModelo(nome,texto){
+  const rid = state.restauranteAtivo;
+  if (!rid) { toast('Selecione um restaurante primeiro.'); return; }
   document.getElementById('modal').innerHTML = `
   <div class="modal open">
     <div class="panel">
@@ -111,7 +131,7 @@ function clonarModelo(nome,texto){
       const d = Object.fromEntries(fd);
       try {
         await window.dbInsert('mensagens', {
-          restaurante_id: state.restauranteAtivo,
+          restaurante_id: rid,
           nome: d.nome,
           texto: d.texto
         });
@@ -125,6 +145,7 @@ function enviarModelo(id){
   const m = state.mensagens.find(x=>x.id===id);
   if(!m) return;
   const rid = state.restauranteAtivo;
+  if (!rid) { toast('Selecione um restaurante primeiro.'); return; }
   const rest = state.restaurantes.find(r=>r.id===rid);
   let texto = m.texto
     .replace(/{{nome_restaurante}}/g, rest?rest.nome:'')

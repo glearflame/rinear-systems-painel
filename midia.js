@@ -28,12 +28,16 @@ async function renderMidia(){
 
 async function renderListaMidia(){
   const rid = state.restauranteAtivo;
+  const el = document.getElementById('listaMidia');
+  if (!rid) {
+    if (el) el.innerHTML = '<div class="empty-state" style="padding:24px"><h3>Selecione um restaurante</h3><p>Escolha um restaurante no seletor acima para ver os arquivos.</p></div>';
+    return;
+  }
   try {
     const arquivos = await window.dbSelect('midia', {
       filter: { column: 'restaurante_id', operator: 'eq', value: rid },
       order: { column: 'created_at', ascending: false }
     });
-    const el = document.getElementById('listaMidia');
     if(!arquivos.length){
       el.innerHTML = '<div class="empty-state" style="padding:24px">Nenhum arquivo enviado ainda.</div>';
       return;
@@ -51,7 +55,6 @@ async function renderListaMidia(){
     `).join('');
   } catch(e){
     console.error(e);
-    const el = document.getElementById('listaMidia');
     if (el) el.innerHTML = '<div class="empty-state" style="padding:24px">Erro ao carregar arquivos.</div>';
   }
 }

@@ -75,17 +75,23 @@ function renderCardapio(){
 
 function renderFiltroCategorias() {
   const rid = state.restauranteAtivo;
-  const cats = state.categorias.filter(c=>c.restauranteId===rid);
   const select = document.getElementById('filtroCategoria');
-  if (select) {
-    select.innerHTML = '<option value="">Todas</option>' + cats.map(c=>`<option value="${c.id}">${c.nome}</option>`).join('');
+  if (!rid || !select) {
+    if (select) select.innerHTML = '<option value="">Selecione um restaurante</option>';
+    return;
   }
+  const cats = state.categorias.filter(c=>c.restauranteId===rid);
+  select.innerHTML = '<option value="">Todas</option>' + cats.map(c=>`<option value="${c.id}">${c.nome}</option>`).join('');
 }
 
 function renderCategorias(){
   const rid = state.restauranteAtivo;
-  const cats = state.categorias.filter(c=>c.restauranteId===rid);
   const el = document.getElementById('listaCategorias');
+  if (!rid || !el) {
+    if (el) el.innerHTML = '<div class="empty-state"><p>Selecione um restaurante primeiro.</p></div>';
+    return;
+  }
+  const cats = state.categorias.filter(c=>c.restauranteId===rid);
   if(!cats.length){ el.innerHTML='<div class="empty-state"><p>Nenhuma categoria ainda.</p></div>'; return; }
   el.innerHTML = cats.map(c=>`
     <div class="card" style="padding:14px">
@@ -101,10 +107,14 @@ function renderCategorias(){
 
 function renderProdutos(){
   const rid = state.restauranteAtivo;
+  const el = document.getElementById('listaProdutos');
+  if (!rid || !el) {
+    if (el) el.innerHTML = '<div class="empty-state"><p>Selecione um restaurante primeiro.</p></div>';
+    return;
+  }
   const catFiltro = document.getElementById('filtroCategoria')?.value;
   let prods = state.produtos.filter(p=>p.restauranteId===rid);
   if (catFiltro) prods = prods.filter(p=>p.categoriaId === catFiltro);
-  const el = document.getElementById('listaProdutos');
   if(!prods.length){ el.innerHTML='<div class="empty-state"><p>Nenhum produto cadastrado para este restaurante/categoria.</p></div>'; return; }
   el.innerHTML = prods.map(p=>`
     <div class="card" style="padding:14px;display:flex;gap:12px;align-items:center">

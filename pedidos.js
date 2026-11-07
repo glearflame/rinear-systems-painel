@@ -17,6 +17,7 @@ async function renderPedidos(){
         <p>${rest?rest.nome:'Selecione um restaurante'} — fluxo de status dos pedidos.</p>
       </div>
     </div>
+    ${rid ? `
     <div class="grid-2">
       <div class="card">
         <h3>Gerar cardápio público (preview)</h3>
@@ -37,15 +38,19 @@ async function renderPedidos(){
           ${renderListaPedidos()}
         </div>
       </div>
-    </div>
+    </div>` : `
+    <div class="card empty-state"><h3>Selecione um restaurante</h3><p>Escolha um restaurante na barra lateral ou no Cardápio para ver os pedidos.</p></div>
+    `}
   </div>`;
   document.getElementById('main').innerHTML = html;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-pedidos').classList.add('active');
-  const link = 'https://rinear-systems-site.glear-games-mk.workers.dev/cardapio.html?id=' + rid;
-  const linkInput = document.getElementById('linkPublico');
-  if (linkInput) linkInput.value = link;
-  renderQR(rid);
+  if (rid) {
+    const link = 'https://rinear-systems-site.glear-games-mk.workers.dev/cardapio.html?id=' + rid;
+    const linkInput = document.getElementById('linkPublico');
+    if (linkInput) linkInput.value = link;
+    renderQR(rid);
+  }
 }
 
 async function loadQRious() {
@@ -97,6 +102,7 @@ function imprimirQR(){ window.print(); toast('Imprima o QR Code para colar no ba
 
 function renderListaPedidos(){
   const rid = state.restauranteAtivo;
+  if (!rid) return '<div class="empty-state" style="padding:16px">Selecione um restaurante primeiro.</div>';
   const peds = state.pedidos.filter(p=>p.restauranteId===rid).slice(-10).reverse();
   if(!peds.length) return '<div class="empty-state" style="padding:16px">Nenhum pedido ainda.</div>';
   return peds.map(p=>`
